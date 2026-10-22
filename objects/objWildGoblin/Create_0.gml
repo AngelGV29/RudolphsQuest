@@ -3,6 +3,19 @@
 //Inicializar propiedades heredadas
 event_inherited();
 
+//Permitir que el duende sea aplastado
+CanBeFlattened = true;
+
+//Recursos de cada estado
+StateSpriteNormal = sprWildGoblinPlaceholder;
+StateMaskNormal = sprWildGoblinMask;
+
+StateSpriteFlattened =
+    sprWildGoblinFlattenedPlaceholder;
+
+StateMaskFlattened =
+    sprWildGoblinFlattenedMask;
+
 //Propiedades del duende
 ContactDamage = 1;
 MoveSpeed = 0.50;

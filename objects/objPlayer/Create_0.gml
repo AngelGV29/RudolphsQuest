@@ -17,7 +17,7 @@ AirDecel = 0.01;
 AirTurnAccel = 0.15;
 
 //Impulso de salto, gravedad y límite de caida
-JumpSpeed = 5.75;
+JumpSpeed = 4.75;
 Gravity = 0.16;
 MaxFallSpeed = 5.9;
 
@@ -62,6 +62,30 @@ KnockbackVSpeed = 1.5;
 //Muerte
 DeathFrames = 45;
 DeathTimer = 0;
+
+//Duración de las fases del martillazo
+HammerStartupFrames = 4;
+HammerActiveFrames = 5;
+HammerRecoveryFrames = 7;
+
+//Control del martillazo actual
+HammerTimer = 0;
+HammerAttackId = 0;
+HammerActive = false;
+
+//Dimensiones de la hitbox
+HammerRange = 14;
+
+//Coordenadas actuales de la hitbox
+HammerHitLeft = 0;
+HammerHitTop = 0;
+HammerHitRight = 0;
+HammerHitBottom = 0;
+
+//Lista temporal de enemigos alcanzados
+HammerHitList = ds_list_create();
+//Mostrar la hitbox del martillo durante las pruebas
+ShowHammerHitbox = true;
 
 //Estados lógicos y visual del jugador
 ActionState = PLAYER_ACTION_STATE.NORMAL;
@@ -131,4 +155,118 @@ TakeDamage = function(DamageAmount, SourceX)
     }
 
     return true;
+};
+
+//Inicia un nuevo martillazo
+StartHammerAttack = function()
+{
+    if (ActionState != PLAYER_ACTION_STATE.NORMAL)
+    {
+        return false;
+    }
+
+    ActionState = PLAYER_ACTION_STATE.HAMMER;
+
+    HammerTimer = 0;
+    HammerActive = false;
+
+    HammerAttackId += 1;
+
+    return true;
+};
+
+//Calcula la zona de impacto del martillo
+UpdateHammerHitbox = function()
+{
+    HammerHitTop = bbox_top + 2;
+    HammerHitBottom = bbox_bottom + 2;
+
+    if (Facing > 0)
+    {
+        HammerHitLeft = bbox_right - 2;
+        HammerHitRight = bbox_right + HammerRange;
+    }
+    else
+    {
+        HammerHitLeft = bbox_left - HammerRange;
+        HammerHitRight = bbox_left + 2;
+    }
+};
+
+//Golpea todos los enemigos dentro de la hitbox
+PerformHammerHit = function()
+{
+    ds_list_clear(HammerHitList);
+
+    var HitCount = collision_rectangle_list(
+        HammerHitLeft,
+        HammerHitTop,
+        HammerHitRight,
+        HammerHitBottom,
+        objEnemy,
+        false,
+        true,
+        HammerHitList,
+        false
+    );
+
+    for (var i = 0; i < HitCount; i += 1)
+    {
+        var Enemy = HammerHitList[| i];
+
+        if (instance_exists(Enemy))
+        {
+            Enemy.ReceiveHammerHit(
+                HammerAttackId,
+                id
+            );
+        }
+    }
+};
+
+//Actualiza las fases del martillazo
+UpdateHammerAttack = function()
+{
+    HammerActive = false;
+
+    if (ActionState != PLAYER_ACTION_STATE.HAMMER)
+    {
+        return;
+    }
+
+    HammerTimer += 1;
+
+    var ActiveStart =
+        HammerStartupFrames;
+
+    var ActiveEnd =
+        HammerStartupFrames
+        + HammerActiveFrames;
+
+    var AttackEnd =
+        HammerStartupFrames
+        + HammerActiveFrames
+        + HammerRecoveryFrames;
+
+    //Activar la hitbox
+    if (
+        HammerTimer > ActiveStart
+        && HammerTimer <= ActiveEnd
+    )
+    {
+        HammerActive = true;
+
+        UpdateHammerHitbox();
+        PerformHammerHit();
+    }
+
+    //Terminar el ataque
+    if (HammerTimer >= AttackEnd)
+    {
+        HammerTimer = 0;
+        HammerActive = false;
+
+        ActionState =
+            PLAYER_ACTION_STATE.NORMAL;
+    }
 };

@@ -10,6 +10,10 @@ switch (EnemyState)
         UpdateNormalState();
         break;
 
+    case ENEMY_STATE.FLATTENED:
+        UpdateFlattenedState();
+        break;
+
     default:
         HSpeed = 0;
         break;
@@ -142,5 +146,15 @@ if (
 //Actualizar temporizador
 StateTimer += 1;
 
-//Orientar sprite
-image_xscale = Facing;
+//Orientar el sprite según su estado
+if (
+    EnemyState == ENEMY_STATE.FLATTENED
+    || EnemyState == ENEMY_STATE.WAKING
+)
+{
+    image_xscale = 1;
+}
+else
+{
+    image_xscale = Facing;
+}

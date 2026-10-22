@@ -1,18 +1,24 @@
 /// @description Procesa entradas, movimiento y colisiones
 
-// --------------------------------------------------
-// 1. Comprobar entradas
-// --------------------------------------------------
+//1. Comprobar entradas
 
+//Caminar
 var LeftHeld = keyboard_check(vk_left);
 var RightHeld = keyboard_check(vk_right);
 
+//Correr
 var RunHeld = keyboard_check(vk_control);
 
+//Saltar
 var JumpHeld = keyboard_check(ord("Z"));
 var JumpPressed = keyboard_check_pressed(ord("Z"));
 var JumpReleased = keyboard_check_released(ord("Z"));
 
+//Ataque con el martillo
+var HammerPressed =
+    keyboard_check_pressed(ord("X"));
+
+//Cálculos de dirección
 var MoveInput = RightHeld - LeftHeld;
 var InputMaxSpeed;
 
@@ -62,7 +68,22 @@ if (!CanControl)
     JumpHeld = false;
     JumpPressed = false;
     JumpReleased = false;
+    
+    HammerPressed = false;
 }
+
+//Iniciar el martillazo
+if (
+    CanControl
+    && HammerPressed
+    && ActionState == PLAYER_ACTION_STATE.NORMAL
+)
+{
+    StartHammerAttack();
+}
+
+//Actualizar el martillazo
+UpdateHammerAttack();
 
 //Calcular el límite de velocidad en el aire
 if (RunHeld)
@@ -74,9 +95,7 @@ else
     InputMaxSpeed = MaxWalkSpeed;
 }
 
-// --------------------------------------------------
-// 2. Comprobar el suelo
-// --------------------------------------------------
+//2. Comprobar el suelo
 
 var WasOnGround = OnGround;
 
@@ -92,9 +111,7 @@ if (WasOnGround && !OnGround)
 }
 
 
-// --------------------------------------------------
-// 3. Actualizar coyote time
-// --------------------------------------------------
+//3. Actualizar coyote time
 
 if (OnGround)
 {
@@ -106,9 +123,7 @@ else
 }
 
 
-// --------------------------------------------------
-// 4. Actualizar buffer de salto
-// --------------------------------------------------
+//4. Actualizar buffer de salto
 
 if (JumpPressed)
 {
@@ -120,9 +135,7 @@ else
 }
 
 
-// --------------------------------------------------
-// 5. Calcular movimiento horizontal
-// --------------------------------------------------
+//5. Calcular movimiento horizontal
 
 var MaxSpeed;
 
@@ -192,9 +205,7 @@ if (MoveInput != 0)
 }
 
 
-// --------------------------------------------------
-// 6. Iniciar salto
-// --------------------------------------------------
+//6. Iniciar salto
 
 //Iniciar salto
 if (JumpBufferTimer > 0 && CoyoteTimer > 0)
@@ -229,9 +240,7 @@ if (JumpBufferTimer > 0 && CoyoteTimer > 0)
 }
 
 
-// --------------------------------------------------
-// 7. Interrumpir salto al soltar Z
-// --------------------------------------------------
+//7. Interrumpir salto al soltar Z
 
 if (JumpReleased && VSpeed < 0)
 {
@@ -239,9 +248,7 @@ if (JumpReleased && VSpeed < 0)
 }
 
 
-// --------------------------------------------------
-// 8. Aplicar gravedad
-// --------------------------------------------------
+//8. Aplicar gravedad
 
 if (!OnGround)
 {
@@ -256,9 +263,7 @@ else if (VSpeed > 0)
 }
 
 
-// --------------------------------------------------
-// 9. Convertir velocidad horizontal a píxeles
-// --------------------------------------------------
+//9. Convertir velocidad horizontal a píxeles
 
 HSubPixel += HSpeed;
 
@@ -269,9 +274,7 @@ var MoveX =
 HSubPixel -= MoveX;
 
 
-// --------------------------------------------------
-// 10. Resolver movimiento horizontal
-// --------------------------------------------------
+//10. Resolver movimiento horizontal
 
 if (MoveX != 0)
 {
@@ -293,9 +296,7 @@ if (MoveX != 0)
 }
 
 
-// --------------------------------------------------
-// 11. Convertir velocidad vertical a píxeles
-// --------------------------------------------------
+//11. Convertir velocidad vertical a píxeles
 
 VSubPixel += VSpeed;
 
@@ -306,9 +307,7 @@ var MoveY =
 VSubPixel -= MoveY;
 
 
-// --------------------------------------------------
-// 12. Resolver movimiento vertical
-// --------------------------------------------------
+//12. Resolver movimiento vertical
 
 if (MoveY != 0)
 {
@@ -330,16 +329,12 @@ if (MoveY != 0)
 }
 
 
-// --------------------------------------------------
-// 13. Actualizar contacto con el suelo
-// --------------------------------------------------
+//13. Actualizar contacto con el suelo
 
 OnGround = place_meeting(x, y + 1, objSolid);
 
-// --------------------------------------------------
-// 14. Determinar estado de animación
-// --------------------------------------------------
 
+//14. Determinar estado de animación
 var NewAnimationState;
 
 var IsMoving = abs(HSpeed) > 0.05;
@@ -350,38 +345,47 @@ var IsSkidding =
     && HSpeed != 0
     && sign(HSpeed) != sign(MoveInput);
 
-if (!OnGround)
+if (ActionState == PLAYER_ACTION_STATE.HAMMER)
+{
+    NewAnimationState =
+        PLAYER_ANIMATION_STATE.HAMMER;
+}
+else if (!OnGround)
 {
     if (VSpeed < 0)
     {
-        NewAnimationState = PLAYER_ANIMATION_STATE.JUMP;
+        NewAnimationState =
+            PLAYER_ANIMATION_STATE.JUMP;
     }
     else
     {
-        NewAnimationState = PLAYER_ANIMATION_STATE.FALL;
+        NewAnimationState =
+            PLAYER_ANIMATION_STATE.FALL;
     }
 }
 else if (IsSkidding)
 {
-    NewAnimationState = PLAYER_ANIMATION_STATE.SKID;
+    NewAnimationState =
+        PLAYER_ANIMATION_STATE.SKID;
 }
 else if (!IsMoving)
 {
-    NewAnimationState = PLAYER_ANIMATION_STATE.IDLE;
+    NewAnimationState =
+        PLAYER_ANIMATION_STATE.IDLE;
 }
 else if (abs(HSpeed) > MaxWalkSpeed)
 {
-    NewAnimationState = PLAYER_ANIMATION_STATE.RUN;
+    NewAnimationState =
+        PLAYER_ANIMATION_STATE.RUN;
 }
 else
 {
-    NewAnimationState = PLAYER_ANIMATION_STATE.WALK;
+    NewAnimationState =
+        PLAYER_ANIMATION_STATE.WALK;
 }
 
 
-// --------------------------------------------------
-// 15. Cambiar animación
-// --------------------------------------------------
+//15. Cambiar animación
 
 if (AnimationState != NewAnimationState)
 {
@@ -412,6 +416,9 @@ if (AnimationState != NewAnimationState)
         case PLAYER_ANIMATION_STATE.SKID:
             sprite_index = sprPlayerSkidPlaceholder;
             break;
+        case PLAYER_ANIMATION_STATE.HAMMER:
+            sprite_index = sprPlayerHammerPlaceholder;
+            break;
     }
 
     image_index = 0;
@@ -435,8 +442,7 @@ else
     image_alpha = 1;
 }
 
-// --------------------------------------------------
-// 16. Orientar sprite
-// --------------------------------------------------
+
+//16. Orientar sprite
 
 image_xscale = Facing;

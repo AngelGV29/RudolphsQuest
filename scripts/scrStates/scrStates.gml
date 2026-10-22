@@ -17,7 +17,8 @@ function scrStates(){
         RUN,
         JUMP,
         FALL,
-        SKID
+        SKID,
+        HAMMER
     }
     
     enum ENEMY_STATE
