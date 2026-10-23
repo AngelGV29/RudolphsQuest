@@ -48,7 +48,6 @@
     {"id":{"name":"rmTest01","path":"rooms/rmTest01/rmTest01.yy",},},
     {"id":{"name":"scrStates","path":"scripts/scrStates/scrStates.yy",},},
     {"id":{"name":"sprPlayerFallPlaceholder","path":"sprites/sprPlayerFallPlaceholder/sprPlayerFallPlaceholder.yy",},},
-    {"id":{"name":"sprPlayerHammerPlaceholder","path":"sprites/sprPlayerHammerPlaceholder/sprPlayerHammerPlaceholder.yy",},},
     {"id":{"name":"sprPlayerHammerUpperPlaceholder","path":"sprites/sprPlayerHammerUpperPlaceholder/sprPlayerHammerUpperPlaceholder.yy",},},
     {"id":{"name":"sprPlayerIdlePlaceholder","path":"sprites/sprPlayerIdlePlaceholder/sprPlayerIdlePlaceholder.yy",},},
     {"id":{"name":"sprPlayerJumpPlaceholder","path":"sprites/sprPlayerJumpPlaceholder/sprPlayerJumpPlaceholder.yy",},},

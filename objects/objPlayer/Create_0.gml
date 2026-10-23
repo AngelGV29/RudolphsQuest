@@ -88,6 +88,13 @@ HammerHitList = ds_list_create();
 //Mostrar la hitbox del martillo durante las pruebas
 ShowHammerHitbox = true;
 
+//Separación visual medida desde arriba del sprite
+BodySplitY = 16;
+
+//Sprite y fotograma independientes del torso atacante
+HammerUpperSprite = sprPlayerHammerUpperPlaceholder;
+HammerUpperFrame = 0;
+
 //Estados lógicos y visual del jugador
 ActionState = PLAYER_ACTION_STATE.NORMAL;
 AnimationState = PLAYER_ANIMATION_STATE.IDLE;

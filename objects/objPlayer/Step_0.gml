@@ -363,12 +363,7 @@ var IsSkidding =
     && HSpeed != 0
     && sign(HSpeed) != sign(MoveInput);
 
-if (ActionState == PLAYER_ACTION_STATE.HAMMER)
-{
-    NewAnimationState =
-        PLAYER_ANIMATION_STATE.HAMMER;
-}
-else if (!OnGround)
+if (!OnGround)
 {
     if (VSpeed < 0)
     {
@@ -427,9 +422,6 @@ if (AnimationState != NewAnimationState)
 
         case PLAYER_ANIMATION_STATE.SKID:
             sprite_index = sprPlayerSkidPlaceholder;
-            break;
-        case PLAYER_ANIMATION_STATE.HAMMER:
-            sprite_index = sprPlayerHammerPlaceholder;
             break;
     }
 
