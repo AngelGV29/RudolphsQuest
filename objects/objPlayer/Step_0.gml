@@ -199,7 +199,12 @@ HSpeed += clamp(
     CurrentAccel
 );
 
-if (MoveInput != 0)
+//Conservar la orientación durante el martillazo
+if (ActionState == PLAYER_ACTION_STATE.HAMMER)
+{
+    Facing = HammerFacing;
+}
+else if (MoveInput != 0)
 {
     Facing = sign(MoveInput);
 }
@@ -263,8 +268,22 @@ else if (VSpeed > 0)
 }
 
 
-//9. Convertir velocidad horizontal a píxeles
+//Detectar bloqueo horizontal
+var WallBlocked = false;
 
+if (HSpeed != 0)
+{
+    var CheckDir = sign(HSpeed);
+
+    if (place_meeting(x + CheckDir, y, objSolid))
+    {
+        HSpeed = 0;
+        HSubPixel = 0;
+        WallBlocked = true;
+    }
+}
+
+//9. Convertir movimiento horizontal a píxeles
 HSubPixel += HSpeed;
 
 var MoveX =
@@ -273,9 +292,7 @@ var MoveX =
 
 HSubPixel -= MoveX;
 
-
 //10. Resolver movimiento horizontal
-
 if (MoveX != 0)
 {
     var StepX = sign(MoveX);
@@ -290,6 +307,7 @@ if (MoveX != 0)
         {
             HSpeed = 0;
             HSubPixel = 0;
+            WallBlocked = true;
             break;
         }
     }
@@ -354,34 +372,28 @@ else if (!OnGround)
 {
     if (VSpeed < 0)
     {
-        NewAnimationState =
-            PLAYER_ANIMATION_STATE.JUMP;
+        NewAnimationState = PLAYER_ANIMATION_STATE.JUMP;
     }
     else
     {
-        NewAnimationState =
-            PLAYER_ANIMATION_STATE.FALL;
+        NewAnimationState = PLAYER_ANIMATION_STATE.FALL;
     }
+}
+else if (WallBlocked || !IsMoving)
+{
+    NewAnimationState = PLAYER_ANIMATION_STATE.IDLE;
 }
 else if (IsSkidding)
 {
-    NewAnimationState =
-        PLAYER_ANIMATION_STATE.SKID;
-}
-else if (!IsMoving)
-{
-    NewAnimationState =
-        PLAYER_ANIMATION_STATE.IDLE;
+    NewAnimationState = PLAYER_ANIMATION_STATE.SKID;
 }
 else if (abs(HSpeed) > MaxWalkSpeed)
 {
-    NewAnimationState =
-        PLAYER_ANIMATION_STATE.RUN;
+    NewAnimationState = PLAYER_ANIMATION_STATE.RUN;
 }
 else
 {
-    NewAnimationState =
-        PLAYER_ANIMATION_STATE.WALK;
+    NewAnimationState = PLAYER_ANIMATION_STATE.WALK;
 }
 
 

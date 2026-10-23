@@ -30,6 +30,7 @@ HSubPixel = 0;
 VSubPixel = 0;
 
 Facing = 1; //Indica hacia donde está mirando el jugador: -1 izquierda y 1 derecha
+HammerFacing = Facing; //Dirección conservada durante el martillazo
 OnGround = false; //Indica si el jugador está en el suelo
 
 //Duración y contador del coyote tume
@@ -165,6 +166,8 @@ StartHammerAttack = function()
         return false;
     }
 
+    //Guardar la dirección del ataque
+    HammerFacing = Facing;
     ActionState = PLAYER_ACTION_STATE.HAMMER;
 
     HammerTimer = 0;
@@ -181,7 +184,7 @@ UpdateHammerHitbox = function()
     HammerHitTop = bbox_top + 2;
     HammerHitBottom = bbox_bottom + 2;
 
-    if (Facing > 0)
+    if (HammerFacing > 0)
     {
         HammerHitLeft = bbox_right - 2;
         HammerHitRight = bbox_right + HammerRange;

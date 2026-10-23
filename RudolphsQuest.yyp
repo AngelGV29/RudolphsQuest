@@ -49,6 +49,7 @@
     {"id":{"name":"scrStates","path":"scripts/scrStates/scrStates.yy",},},
     {"id":{"name":"sprPlayerFallPlaceholder","path":"sprites/sprPlayerFallPlaceholder/sprPlayerFallPlaceholder.yy",},},
     {"id":{"name":"sprPlayerHammerPlaceholder","path":"sprites/sprPlayerHammerPlaceholder/sprPlayerHammerPlaceholder.yy",},},
+    {"id":{"name":"sprPlayerHammerUpperPlaceholder","path":"sprites/sprPlayerHammerUpperPlaceholder/sprPlayerHammerUpperPlaceholder.yy",},},
     {"id":{"name":"sprPlayerIdlePlaceholder","path":"sprites/sprPlayerIdlePlaceholder/sprPlayerIdlePlaceholder.yy",},},
     {"id":{"name":"sprPlayerJumpPlaceholder","path":"sprites/sprPlayerJumpPlaceholder/sprPlayerJumpPlaceholder.yy",},},
     {"id":{"name":"sprPlayerMask","path":"sprites/sprPlayerMask/sprPlayerMask.yy",},},

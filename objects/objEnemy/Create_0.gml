@@ -84,11 +84,32 @@ ChangeState = function(NewState)
     {
         return false; //Ya estaba en ese estado
     }
-
+    var PreviousState = EnemyState;
     EnemyState = NewState;
     StateTimer = 0;
 
     OnStateEnter(NewState);
+    
+    //Mirar al jugador al terminar de despertar
+    if (
+        PreviousState == ENEMY_STATE.WAKING
+        && NewState == ENEMY_STATE.NORMAL
+    )
+    {
+        var Player = instance_find(objPlayer, 0);
+    
+        if (instance_exists(Player))
+        {
+            var PlayerDir = sign(Player.x - x);
+    
+            if (PlayerDir != 0)
+            {
+                Facing = PlayerDir;
+            }
+        }
+    
+        image_xscale = Facing;
+    }
 
     return true; //El estado cambió
 };
