@@ -95,9 +95,42 @@ BodySplitY = 16;
 HammerUpperSprite = sprPlayerHammerUpperPlaceholder;
 HammerUpperFrame = 0;
 
+//Enemigo actualmente sujeto
+CarriedEnemy = noone;
+
+//Alcance para recoger desde los lados
+PickupRange = 10;
+
+//Diferencia vertical permitida entre los pies
+PickupHeight = 8;
+
+//Posición visual del enemigo respecto a Rudolph
+CarryOffsetX = 10;
+CarryOffsetY = -16;
+
 //Estados lógicos y visual del jugador
 ActionState = PLAYER_ACTION_STATE.NORMAL;
 AnimationState = PLAYER_ANIMATION_STATE.IDLE;
+
+//Soltar al enemigo sin lanzarlo
+DropCarriedEnemy = function()
+{
+    var Enemy = CarriedEnemy;
+
+    CarriedEnemy = noone;
+
+    if (!instance_exists(Enemy))
+    {
+        return;
+    }
+
+    if (Enemy.Carrier != id)
+    {
+        return;
+    }
+
+    Enemy.ChangeState(ENEMY_STATE.FLATTENED);
+};
 
 //Aplica daño y devuelve si el golpe fue aceptado
 TakeDamage = function(DamageAmount, SourceX)
@@ -112,6 +145,9 @@ TakeDamage = function(DamageAmount, SourceX)
         return false;
     }
 
+    //Soltar solo si el daño fue aceptado
+    DropCarriedEnemy();
+    
     Hp = max(
         Hp - DamageAmount,
         0
@@ -169,6 +205,12 @@ TakeDamage = function(DamageAmount, SourceX)
 StartHammerAttack = function()
 {
     if (ActionState != PLAYER_ACTION_STATE.NORMAL)
+    {
+        return false;
+    }
+    
+    //No utilizar el martillo mientras carga un enemigo
+    if (instance_exists(CarriedEnemy))
     {
         return false;
     }
@@ -279,4 +321,90 @@ UpdateHammerAttack = function()
         ActionState =
             PLAYER_ACTION_STATE.NORMAL;
     }
+};
+
+//Recoger el enemigo válido más cercano
+TryPickupEnemy = function()
+{
+    if (ActionState != PLAYER_ACTION_STATE.NORMAL)
+    {
+        return false;
+    }
+
+    if (instance_exists(CarriedEnemy))
+    {
+        return false;
+    }
+
+    CarriedEnemy = noone;
+
+    var BestEnemy = noone;
+    var BestDistance = 1000000;
+
+    var EnemyCount = instance_number(objEnemy);
+
+    for (var Index = 0; Index < EnemyCount; Index += 1)
+    {
+        var Enemy = instance_find(objEnemy, Index);
+
+        if (!instance_exists(Enemy))
+        {
+            continue;
+        }
+
+        if (!Enemy.CanBeCarried || Enemy.Carrier != noone)
+        {
+            continue;
+        }
+
+        var ValidState =
+            Enemy.EnemyState == ENEMY_STATE.FLATTENED
+            || Enemy.EnemyState == ENEMY_STATE.WAKING;
+
+        if (!ValidState)
+        {
+            continue;
+        }
+
+        //Comprobar el suelo en este momento
+        if (!Enemy.HasGround())
+        {
+            continue;
+        }
+
+        var GapX = max(
+            0,
+            max(
+                Enemy.bbox_left - bbox_right,
+                bbox_left - Enemy.bbox_right
+            )
+        );
+
+        var GapY = abs(Enemy.bbox_bottom - bbox_bottom);
+
+        if (GapX > PickupRange || GapY > PickupHeight)
+        {
+            continue;
+        }
+
+        var Distance = abs(Enemy.x - x);
+
+        if (Distance < BestDistance)
+        {
+            BestDistance = Distance;
+            BestEnemy = Enemy;
+        }
+    }
+
+    if (!instance_exists(BestEnemy))
+    {
+        return false;
+    }
+
+    CarriedEnemy = BestEnemy;
+    BestEnemy.Carrier = id;
+
+    BestEnemy.ChangeState(ENEMY_STATE.CARRIED);
+
+    return true;
 };

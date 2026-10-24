@@ -1,5 +1,11 @@
 /// @description Actualiza el estado, movimiento y colisiones del enemigo
 
+//Resolver la desaparición inesperada del portador
+if (Carrier != noone && !instance_exists(Carrier))
+{
+    ChangeState(ENEMY_STATE.FLATTENED);
+}
+
 //Comprobar el suelo
 OnGround = place_meeting(x, y + 1, objSolid);
 
@@ -21,9 +27,28 @@ switch (EnemyState)
         UpdateWakingState();
         break;
     
+    case ENEMY_STATE.CARRIED:
+        UpdateCarriedState();
+        break;
+
     default:
         HSpeed = 0;
         break;
+}
+
+//El portador controla la posición del enemigo sujeto
+if (instance_exists(Carrier))
+{
+    HSpeed = 0;
+    VSpeed = 0;
+
+    HSubPixel = 0;
+    VSubPixel = 0;
+
+    OnGround = false;
+    image_xscale = 1;
+
+    exit;
 }
 
 //Aplicar gravedad
@@ -154,6 +179,7 @@ if (
 if (
     EnemyState == ENEMY_STATE.FLATTENED
     || EnemyState == ENEMY_STATE.WAKING
+    || EnemyState == ENEMY_STATE.CARRIED
 )
 {
     image_xscale = 1;

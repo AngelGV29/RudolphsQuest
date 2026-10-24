@@ -15,8 +15,10 @@ var JumpPressed = keyboard_check_pressed(ord("Z"));
 var JumpReleased = keyboard_check_released(ord("Z"));
 
 //Ataque con el martillo
-var HammerPressed =
-    keyboard_check_pressed(ord("X"));
+var HammerPressed = keyboard_check_pressed(ord("X"));
+
+//Recoger un enemigo
+var PickupPressed = keyboard_check_pressed(ord("C"));
 
 //Cálculos de dirección
 var MoveInput = RightHeld - LeftHeld;
@@ -70,6 +72,20 @@ if (!CanControl)
     JumpReleased = false;
     
     HammerPressed = false;
+    
+    PickupPressed = false;
+}
+
+//Limpiar una referencia que ya no exista
+if (!instance_exists(CarriedEnemy))
+{
+    CarriedEnemy = noone;
+}
+
+//Intentar recoger
+if (CanControl && PickupPressed)
+{
+    TryPickupEnemy();
 }
 
 //Iniciar el martillazo

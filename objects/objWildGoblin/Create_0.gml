@@ -5,6 +5,7 @@ event_inherited();
 
 //Permitir que el duende sea aplastado
 CanBeFlattened = true;
+CanBeCarried = true;
 
 //Recursos de cada estado
 StateSpriteNormal = sprWildGoblinPlaceholder;
@@ -22,7 +23,6 @@ MoveSpeed = 0.50;
 UsesGravity = true;
 Gravity = 0.16;
 MaxFallSpeed = 5.90;
-
 Facing = -1;
 
 //Avanzar constantemente

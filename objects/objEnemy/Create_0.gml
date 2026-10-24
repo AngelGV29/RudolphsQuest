@@ -109,7 +109,57 @@ OnStateEnter = function(NewState)
             image_index = 0;
             image_speed = 1;
             break;
+        
+        case ENEMY_STATE.CARRIED:
+            HSpeed = 0;
+            VSpeed = 0;
+        
+            HSubPixel = 0;
+            VSubPixel = 0;
+        
+            OnGround = false;
+        
+            if (StateSpriteFlattened != -1)
+            {
+                sprite_index = StateSpriteFlattened;
+            }
+        
+            if (StateMaskFlattened != -1)
+            {
+                mask_index = StateMaskFlattened;
+            }
+        
+            image_index = 0;
+            image_speed = 0;
+            break;
     }
+};
+
+//Desvincular al portador y colocar al enemigo junto a sus pies
+DetachCarrier = function()
+{
+    var Player = Carrier;
+
+    Carrier = noone;
+
+    if (instance_exists(Player))
+    {
+        if (Player.CarriedEnemy == id)
+        {
+            Player.CarriedEnemy = noone;
+        }
+
+        x = Player.x;
+        y = Player.y;
+    }
+
+    HSpeed = 0;
+    VSpeed = 0;
+
+    HSubPixel = 0;
+    VSubPixel = 0;
+
+    OnGround = false;
 };
 
 //Cambia de estado y reinicia su temporizador
@@ -123,28 +173,42 @@ ChangeState = function(NewState)
     EnemyState = NewState;
     StateTimer = 0;
 
+    //Conservar el vínculo solo durante carga y advertencia
+    if (
+        Carrier != noone
+        && NewState != ENEMY_STATE.CARRIED
+        && NewState != ENEMY_STATE.WAKING
+    )
+    {
+        DetachCarrier();
+    }
+    
     OnStateEnter(NewState);
     
     //Mirar al jugador al terminar de despertar
     if (
-        PreviousState == ENEMY_STATE.WAKING
-        && NewState == ENEMY_STATE.NORMAL
-    )
-    {
-        var Player = instance_find(objPlayer, 0);
-    
-        if (instance_exists(Player))
-        {
-            var PlayerDir = sign(Player.x - x);
-    
-            if (PlayerDir != 0)
-            {
-                Facing = PlayerDir;
-            }
-        }
-    
-        image_xscale = Facing;
-    }
+       PreviousState == ENEMY_STATE.WAKING
+       && NewState == ENEMY_STATE.NORMAL
+   )
+   {
+       var Player = instance_find(objPlayer, 0);
+   
+       if (instance_exists(Player))
+       {
+           var WakeDir = sign(Player.x - x);
+   
+           if (WakeDir != 0)
+           {
+               Facing = WakeDir;
+           }
+           else
+           {
+               Facing = Player.Facing;
+           }
+       }
+   
+       image_xscale = Facing;
+   }
 
     return true; //El estado cambió
 };
@@ -159,6 +223,12 @@ UpdateNormalState = function()
 OnWallHit = function()
 {
     HSpeed = 0;
+};
+
+//Comprobar si la máscara del enemigo está apoyada
+HasGround = function()
+{
+    return place_meeting(x, y + 1, objSolid);
 };
 
 //Reacción ejecutada después de dañar al jugador
@@ -187,6 +257,12 @@ RemoveFromLevel = function(PermanentlyDefeated)
 //Procesa un impacto del martillo
 ReceiveHammerHit = function(AttackId, Attacker)
 {
+    //No golpear enemigos que estén sujetos
+    if (Carrier != noone)
+    {
+        return false;
+    }
+    
     //Evitar impactos repetidos del mismo martillazo
     if (LastHammerAttackId == AttackId)
     {
@@ -236,5 +312,14 @@ UpdateWakingState = function()
     if (StateTimer >= WakingFrames)
     {
         ChangeState(ENEMY_STATE.NORMAL);
+    }
+};
+
+//Esperar en brazos antes de comenzar a despertar
+UpdateCarriedState = function()
+{
+    if (StateTimer >= CarriedFrames)
+    {
+        ChangeState(ENEMY_STATE.WAKING);
     }
 };
