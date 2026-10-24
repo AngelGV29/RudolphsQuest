@@ -61,6 +61,7 @@
     {"id":{"name":"sprWildGoblinFlattenedPlaceholder","path":"sprites/sprWildGoblinFlattenedPlaceholder/sprWildGoblinFlattenedPlaceholder.yy",},},
     {"id":{"name":"sprWildGoblinMask","path":"sprites/sprWildGoblinMask/sprWildGoblinMask.yy",},},
     {"id":{"name":"sprWildGoblinPlaceholder","path":"sprites/sprWildGoblinPlaceholder/sprWildGoblinPlaceholder.yy",},},
+    {"id":{"name":"sprWildGoblinWakingPlaceholder","path":"sprites/sprWildGoblinWakingPlaceholder/sprWildGoblinWakingPlaceholder.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",

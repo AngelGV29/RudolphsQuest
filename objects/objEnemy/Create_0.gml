@@ -34,6 +34,19 @@ StateMaskNormal = mask_index;
 StateSpriteFlattened = -1;
 StateMaskFlattened = -1;
 
+StateSpriteWaking = -1;
+
+//Duración del aplastamiento y la advertencia
+FlattenedFrames = 240; //4 segundos
+WakingFrames = 150; // 2.5 segundos
+
+//Capacidad y vínculo de carga
+CanBeCarried = false;
+Carrier = noone;
+
+//Duración antes de advertir que despertará en brazos
+CarriedFrames = 240; //4 segundos
+
 //Referencia al generador que creó al enemigo
 SpawnOwner = noone;
 
@@ -73,6 +86,28 @@ OnStateEnter = function(NewState)
 
             image_index = 0;
             image_speed = 0;
+            break;
+        
+        case ENEMY_STATE.WAKING:
+            HSpeed = 0;
+            HSubPixel = 0;
+        
+            if (StateSpriteWaking != -1)
+            {
+                sprite_index = StateSpriteWaking;
+            }
+            else if (StateSpriteFlattened != -1)
+            {
+                sprite_index = StateSpriteFlattened;
+            }
+        
+            if (StateMaskFlattened != -1)
+            {
+                mask_index = StateMaskFlattened;
+            }
+        
+            image_index = 0;
+            image_speed = 1;
             break;
     }
 };
@@ -185,4 +220,21 @@ ReceiveHammerHit = function(AttackId, Attacker)
 UpdateFlattenedState = function()
 {
     HSpeed = 0;
+    
+    if (StateTimer >= FlattenedFrames)
+    {
+        ChangeState(ENEMY_STATE.WAKING);
+    }
+};
+
+//Advierte que el enemigo está a punto de despertar
+UpdateWakingState = function()
+{
+    HSpeed = 0;
+
+    //Recuperar el comportamiento normal
+    if (StateTimer >= WakingFrames)
+    {
+        ChangeState(ENEMY_STATE.NORMAL);
+    }
 };

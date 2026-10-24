@@ -3,6 +3,9 @@
 //Comprobar el suelo
 OnGround = place_meeting(x, y + 1, objSolid);
 
+//Actualizar temporizador
+StateTimer += 1;
+
 //Ejecutar el estado actual
 switch (EnemyState)
 {
@@ -14,6 +17,10 @@ switch (EnemyState)
         UpdateFlattenedState();
         break;
 
+    case ENEMY_STATE.WAKING:
+        UpdateWakingState();
+        break;
+    
     default:
         HSpeed = 0;
         break;
@@ -142,9 +149,6 @@ if (
         }
     }
 }
-
-//Actualizar temporizador
-StateTimer += 1;
 
 //Orientar el sprite según su estado
 if (

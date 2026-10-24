@@ -10,11 +10,10 @@ CanBeFlattened = true;
 StateSpriteNormal = sprWildGoblinPlaceholder;
 StateMaskNormal = sprWildGoblinMask;
 
-StateSpriteFlattened =
-    sprWildGoblinFlattenedPlaceholder;
+StateSpriteFlattened = sprWildGoblinFlattenedPlaceholder;
+StateMaskFlattened = sprWildGoblinFlattenedMask;
 
-StateMaskFlattened =
-    sprWildGoblinFlattenedMask;
+StateSpriteWaking = sprWildGoblinWakingPlaceholder;
 
 //Propiedades del duende
 ContactDamage = 1;
