@@ -88,11 +88,9 @@ HammerHitList = ds_list_create();
 //Mostrar la hitbox del martillo durante las pruebas
 ShowHammerHitbox = true;
 
-//Separación visual medida desde arriba del sprite
-BodySplitY = 16;
 
 //Sprite y fotograma independientes del torso atacante
-HammerUpperSprite = sprPlayerHammerUpperPlaceholder;
+HammerUpperSprite = sprPlayerHammerUpper;
 HammerUpperFrame = 0;
 
 //Enemigo actualmente sujeto
@@ -107,6 +105,18 @@ PickupHeight = 8;
 //Posición visual del enemigo respecto a Rudolph
 CarryOffsetX = 10;
 CarryOffsetY = -16;
+
+//Parte superior correspondiente a la locomoción
+MoveUpperSprite = sprPlayerIdleUpper; //Sprite superior que corresponde a la locomoción actual
+
+//Reemplazo visual temporal de la parte superior
+UpperOverrideSprite = -1; //Sprite que reemplaza temporalmente al superior; -1 significa que no hay reemplazo
+UpperOverrideFrame = 0; //Fotograma del reemplazo superior
+
+//Inicializar la locomoción visible
+sprite_index = sprPlayerIdleLower; //Sprite inferior de locomoción
+image_index = 0; //Fotograma de locomoción compartido por ambas partes
+image_speed = 1;
 
 //Estados lógicos y visual del jugador
 ActionState = PLAYER_ACTION_STATE.NORMAL;
@@ -221,6 +231,7 @@ StartHammerAttack = function()
 
     HammerTimer = 0;
     HammerActive = false;
+    HammerUpperFrame = 0;
 
     HammerAttackId += 1;
 
@@ -299,6 +310,18 @@ UpdateHammerAttack = function()
         HammerStartupFrames
         + HammerActiveFrames
         + HammerRecoveryFrames;
+    
+    //Sincronizar el torso con la duración del ataque
+    var HammerFrameCount =
+        sprite_get_number(HammerUpperSprite);
+    
+    HammerUpperFrame = min(
+        floor(
+            (max(HammerTimer - 1, 0) / AttackEnd)
+            * HammerFrameCount
+        ),
+        HammerFrameCount - 1
+    );
 
     //Activar la hitbox
     if (

@@ -34,8 +34,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"sprPlayerPlaceHolder",
-    "path":"sprites/sprPlayerPlaceHolder/sprPlayerPlaceHolder.yy",
+    "name":"sprPlayerPlaceholder",
+    "path":"sprites/sprPlayerPlaceholder/sprPlayerPlaceholder.yy",
   },
   "spriteMaskId":{
     "name":"sprPlayerMask",

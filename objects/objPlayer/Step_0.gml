@@ -408,8 +408,9 @@ else
 }
 
 
-//15. Cambiar animación
+//15. Cambiar animación (Ahora adaptado con la implementación de mitad superior e inferior)
 
+//Cambiar la pareja de locomoción
 if (AnimationState != NewAnimationState)
 {
     AnimationState = NewAnimationState;
@@ -417,32 +418,38 @@ if (AnimationState != NewAnimationState)
     switch (AnimationState)
     {
         case PLAYER_ANIMATION_STATE.IDLE:
-            sprite_index = sprPlayerIdlePlaceholder;
+            sprite_index = sprPlayerIdleLower;
+            MoveUpperSprite = sprPlayerIdleUpper;
             break;
 
         case PLAYER_ANIMATION_STATE.WALK:
-            sprite_index = sprPlayerWalkPlaceholder;
+            sprite_index = sprPlayerWalkLower;
+            MoveUpperSprite = sprPlayerWalkUpper;
             break;
 
         case PLAYER_ANIMATION_STATE.RUN:
-            sprite_index = sprPlayerRunPlaceholder;
+            sprite_index = sprPlayerRunLower;
+            MoveUpperSprite = sprPlayerRunUpper;
             break;
 
         case PLAYER_ANIMATION_STATE.JUMP:
-            sprite_index = sprPlayerJumpPlaceholder;
+            sprite_index = sprPlayerJumpLower;
+            MoveUpperSprite = sprPlayerJumpUpper;
             break;
 
         case PLAYER_ANIMATION_STATE.FALL:
-            sprite_index = sprPlayerFallPlaceholder;
+            sprite_index = sprPlayerFallLower;
+            MoveUpperSprite = sprPlayerFallUpper;
             break;
 
         case PLAYER_ANIMATION_STATE.SKID:
-            sprite_index = sprPlayerSkidPlaceholder;
+            sprite_index = sprPlayerSkidLower;
+            MoveUpperSprite = sprPlayerSkidUpper;
             break;
     }
 
     image_index = 0;
-    image_speed = 0;
+    image_speed = 1;
 }
 
 //Mostrar la invulnerabilidad
@@ -465,4 +472,16 @@ else
 
 //16. Orientar sprite
 
+
 image_xscale = Facing;
+
+//Usar el torso de locomoción salvo que una acción lo reemplace
+UpperOverrideSprite = -1;
+UpperOverrideFrame = 0;
+
+//Reemplazar únicamente el torso durante el martillazo
+if (ActionState == PLAYER_ACTION_STATE.HAMMER)
+{
+    UpperOverrideSprite = HammerUpperSprite;
+    UpperOverrideFrame = HammerUpperFrame;
+}

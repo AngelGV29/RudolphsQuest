@@ -1,49 +1,39 @@
 /// @description Dibuja al jugador y la hitbox de prueba
 
-//Dibujar locomoción normal
-if (ActionState != PLAYER_ACTION_STATE.HAMMER)
+//Dibujar la parte inferior
+draw_sprite_ext(
+    sprite_index,
+    floor(image_index),
+    x,
+    y,
+    image_xscale,
+    image_yscale,
+    image_angle,
+    image_blend,
+    image_alpha
+);
+
+//Seleccionar la parte superior
+var UpperSprite = MoveUpperSprite;
+var UpperFrame = floor(image_index);
+
+if (UpperOverrideSprite != -1)
 {
-    draw_self();
+    UpperSprite = UpperOverrideSprite;
+    UpperFrame = floor(UpperOverrideFrame);
 }
-else
+
+//Dibujar la parte superior
+if (UpperSprite != -1)
 {
-    //Obtener dimensiones y origen del sprite de locomoción
-    var BodyWidth = sprite_get_width(sprite_index);
-    var BodyHeight = sprite_get_height(sprite_index);
-
-    var OriginX = sprite_get_xoffset(sprite_index);
-    var OriginY = sprite_get_yoffset(sprite_index);
-
-    //Alinear la parte inferior con el origen del personaje
-    var DrawX = x - OriginX * image_xscale;
-    var DrawY =
-        y + (BodySplitY - OriginY) * image_yscale;
-
-    //Dibujar piernas con su fotograma de locomoción
-    draw_sprite_part_ext(
-        sprite_index,
-        floor(image_index),
-        0,
-        BodySplitY,
-        BodyWidth,
-        BodyHeight - BodySplitY,
-        DrawX,
-        DrawY,
-        image_xscale,
-        image_yscale,
-        image_blend,
-        image_alpha
-    );
-
-    //Dibujar torso y martillo con un fotograma independiente
     draw_sprite_ext(
-        HammerUpperSprite,
-        floor(HammerUpperFrame),
+        UpperSprite,
+        UpperFrame,
         x,
         y,
-        HammerFacing,
+        image_xscale,
         image_yscale,
-        0,
+        image_angle,
         image_blend,
         image_alpha
     );
