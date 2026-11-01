@@ -50,6 +50,18 @@ if (!instance_exists(ActiveEnemy))
     exit;
 }
 
+//Dejar que el lanzamiento termine por impacto o por tiempo
+if (ActiveEnemy.EnemyState == ENEMY_STATE.THROWN)
+{
+    exit;
+}
+
+//No retirar enemigos que estén sujetos
+if (instance_exists(ActiveEnemy.Carrier))
+{
+    exit;
+}
+
 //Calcular la distancia entre jugador y enemigo
 var EnemyDistanceX = abs(Player.x - ActiveEnemy.x);
 var EnemyDistanceY = abs(Player.y - ActiveEnemy.y);

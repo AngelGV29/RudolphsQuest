@@ -6,6 +6,7 @@ event_inherited();
 //Permitir que el duende sea aplastado
 CanBeFlattened = true;
 CanBeCarried = true;
+CanBeHitByThrown = true;
 
 //Recursos de cada estado
 StateSpriteNormal = sprWildGoblinPlaceholder;

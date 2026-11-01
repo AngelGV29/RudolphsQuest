@@ -47,6 +47,20 @@ Carrier = noone;
 //Duración antes de advertir que despertará en brazos
 CarriedFrames = 240; //4 segundos
 
+//Configuración del lanzamiento
+ThrowMode = THROW_MODE.HORIZONTAL;
+ThrowOwner = noone;
+ThrownFrames = 150;
+
+//Frenado del enemigo aplastado al tocar el suelo
+FlattenedDecel = 0.5;
+
+//Evitar procesar una instancia retirada
+RemovedFromLevel = false;
+
+//Vulnerabilidad a enemigos lanzados
+CanBeHitByThrown = false;
+
 //Referencia al generador que creó al enemigo
 SpawnOwner = noone;
 
@@ -132,7 +146,24 @@ OnStateEnter = function(NewState)
             image_index = 0;
             image_speed = 0;
             break;
-    }
+        
+        case ENEMY_STATE.THROWN:
+            OnGround = false;
+        
+            if (StateSpriteFlattened != -1)
+            {
+                sprite_index = StateSpriteFlattened;
+            }
+        
+            if (StateMaskFlattened != -1)
+            {
+                mask_index = StateMaskFlattened;
+            }
+        
+            image_index = 0;
+            image_speed = 0;
+            break;
+            }
 };
 
 //Desvincular al portador y colocar al enemigo junto a sus pies
@@ -170,6 +201,11 @@ ChangeState = function(NewState)
         return false; //Ya estaba en ese estado
     }
     var PreviousState = EnemyState;
+    var PreviousHSpeed = HSpeed;
+    var PreviousVSpeed = VSpeed;
+    var PreviousHSubPixel = HSubPixel;
+    var PreviousVSubPixel = VSubPixel;
+
     EnemyState = NewState;
     StateTimer = 0;
 
@@ -184,6 +220,20 @@ ChangeState = function(NewState)
     }
     
     OnStateEnter(NewState);
+    //Conservar la trayectoria al terminar el lanzamiento
+    if (
+        PreviousState == ENEMY_STATE.THROWN
+        && NewState == ENEMY_STATE.FLATTENED
+    )
+    {
+        HSpeed = PreviousHSpeed;
+        VSpeed = PreviousVSpeed;
+    
+        HSubPixel = PreviousHSubPixel;
+        VSubPixel = PreviousVSubPixel;
+    
+        ThrowOwner = noone;
+    }
     
     //Mirar al jugador al terminar de despertar
     if (
@@ -203,7 +253,7 @@ ChangeState = function(NewState)
            }
            else
            {
-               Facing = Player.Facing;
+               Facing = -Player.Facing;
            }
        }
    
@@ -239,11 +289,37 @@ OnPlayerDamaged = function(Player, PlayerSide)
 //Elimina al enemigo y notifica a su generador
 RemoveFromLevel = function(PermanentlyDefeated)
 {
+    if (RemovedFromLevel)
+    {
+        return;
+    }
+
+    RemovedFromLevel = true;
+
+    if (PermanentlyDefeated)
+    {
+        EnemyState = ENEMY_STATE.DEFEATED;
+    }
+
+    var Player = Carrier;
+    Carrier = noone;
+
+    if (instance_exists(Player))
+    {
+        if (Player.CarriedEnemy == id)
+        {
+            Player.CarriedEnemy = noone;
+        }
+    }
+
     var Owner = SpawnOwner;
 
     if (instance_exists(Owner))
     {
-        Owner.ActiveEnemy = noone;
+        if (Owner.ActiveEnemy == id)
+        {
+            Owner.ActiveEnemy = noone;
+        }
 
         if (PermanentlyDefeated)
         {
@@ -253,7 +329,6 @@ RemoveFromLevel = function(PermanentlyDefeated)
 
     instance_destroy();
 };
-
 //Procesa un impacto del martillo
 ReceiveHammerHit = function(AttackId, Attacker)
 {
@@ -292,11 +367,19 @@ ReceiveHammerHit = function(AttackId, Attacker)
     return true;
 };
 
-//Comportamiento mientras el enemigo está aplastado
+//Actualizar al enemigo aplastado
 UpdateFlattenedState = function()
 {
-    HSpeed = 0;
-    
+    //Frenar gradualmente sobre el suelo
+    if (OnGround)
+    {
+        HSpeed += clamp(
+            -HSpeed,
+            -FlattenedDecel,
+            FlattenedDecel
+        );
+    }
+
     if (StateTimer >= FlattenedFrames)
     {
         ChangeState(ENEMY_STATE.WAKING);
@@ -321,5 +404,162 @@ UpdateCarriedState = function()
     if (StateTimer >= CarriedFrames)
     {
         ChangeState(ENEMY_STATE.WAKING);
+    }
+};
+
+//Recibir el impacto de un enemigo lanzado
+ReceiveThrownHit = function(Projectile)
+{
+    if (RemovedFromLevel || !CanBeHitByThrown)
+    {
+        return false;
+    }
+
+    if (Carrier != noone)
+    {
+        return false;
+    }
+
+    var ValidState =
+        EnemyState == ENEMY_STATE.NORMAL
+        || EnemyState == ENEMY_STATE.FLATTENED
+        || EnemyState == ENEMY_STATE.WAKING;
+
+    if (!ValidState)
+    {
+        return false;
+    }
+
+    RemoveFromLevel(true);
+
+    return true;
+};
+
+//Comprobar impactos del proyectil en su posición actual
+CheckThrownImpact = function()
+{
+    //Los sólidos consumen el proyectil
+    if (place_meeting(x, y, objSolid))
+    {
+        RemoveFromLevel(true);
+        return true;
+    }
+
+    var EnemyCount = instance_number(objEnemy);
+
+    for (var Index = 0; Index < EnemyCount; Index += 1)
+    {
+        var Target = instance_find(objEnemy, Index);
+
+        if (!instance_exists(Target))
+        {
+            continue;
+        }
+
+        if (Target == id || Target.RemovedFromLevel)
+        {
+            continue;
+        }
+
+        if (Target.Carrier != noone)
+        {
+            continue;
+        }
+
+        var ValidTarget =
+            Target.EnemyState == ENEMY_STATE.NORMAL
+            || Target.EnemyState == ENEMY_STATE.FLATTENED
+            || Target.EnemyState == ENEMY_STATE.WAKING;
+
+        if (!ValidTarget)
+        {
+            continue;
+        }
+
+        if (instance_place(x, y, Target) != noone)
+        {
+            Target.ReceiveThrownHit(id);
+
+            //El primer enemigo alcanzado consume el proyectil
+            RemoveFromLevel(true);
+            return true;
+        }
+    }
+
+    return false;
+};
+
+//Actualizar el lanzamiento y comprobar todo su recorrido
+UpdateThrownState = function()
+{
+    //Detectar impactos desde la posición inicial
+    if (CheckThrownImpact())
+    {
+        return;
+    }
+
+    if (ThrowMode == THROW_MODE.ARC)
+    {
+        VSpeed = min(
+            VSpeed + Gravity,
+            MaxFallSpeed
+        );
+    }
+    else
+    {
+        VSpeed = 0;
+    }
+
+    //Convertir las velocidades a desplazamiento entero
+    HSubPixel += HSpeed;
+    VSubPixel += VSpeed;
+
+    var MoveX =
+        floor(abs(HSubPixel))
+        * sign(HSubPixel);
+
+    var MoveY =
+        floor(abs(VSubPixel))
+        * sign(VSubPixel);
+
+    HSubPixel -= MoveX;
+    VSubPixel -= MoveY;
+
+    //Dividir el recorrido en avances pequeños
+    var MoveSteps = max(
+        abs(MoveX),
+        abs(MoveY)
+    );
+
+    if (MoveSteps > 0)
+    {
+        var StartX = x;
+        var StartY = y;
+
+        for (
+            var MoveIndex = 1;
+            MoveIndex <= MoveSteps;
+            MoveIndex += 1
+        )
+        {
+            x = StartX + round(
+                MoveX * MoveIndex / MoveSteps
+            );
+
+            y = StartY + round(
+                MoveY * MoveIndex / MoveSteps
+            );
+
+            if (CheckThrownImpact())
+            {
+                return;
+            }
+        }
+    }
+
+    //Terminar el lanzamiento sin borrar el impulso
+    if (StateTimer >= ThrownFrames)
+    {
+        ChangeState(ENEMY_STATE.FLATTENED);
     }
 };

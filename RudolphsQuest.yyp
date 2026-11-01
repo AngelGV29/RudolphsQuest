@@ -23,7 +23,8 @@
     {"$GMFolder":"","%Name":"Rudolph","folderPath":"folders/Entidades/Vivos/Rudolph.yy","name":"Rudolph","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Escenas","folderPath":"folders/Escenas.yy","name":"Escenas","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Rooms","folderPath":"folders/Escenas/Rooms.yy","name":"Rooms","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"Test 01","folderPath":"folders/Escenas/Rooms/Test 01.yy","name":"Test 01","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"TestSpwanDespawnEnemies","folderPath":"folders/Escenas/Rooms/TestSpwanDespawnEnemies.yy","name":"TestSpwanDespawnEnemies","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"TestMoveSet","folderPath":"folders/Escenas/Rooms/TestMoveSet.yy","name":"TestMoveSet","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Fuentes","folderPath":"folders/Fuentes.yy","name":"Fuentes","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Materiales","folderPath":"folders/Materiales.yy","name":"Materiales","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Scripts","folderPath":"folders/Scripts.yy","name":"Scripts","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -46,6 +47,7 @@
     {"id":{"name":"objWildGoblin","path":"objects/objWildGoblin/objWildGoblin.yy",},},
     {"id":{"name":"objWildGoblinSpawner","path":"objects/objWildGoblinSpawner/objWildGoblinSpawner.yy",},},
     {"id":{"name":"rmTest01","path":"rooms/rmTest01/rmTest01.yy",},},
+    {"id":{"name":"rmTest02","path":"rooms/rmTest02/rmTest02.yy",},},
     {"id":{"name":"scrStates","path":"scripts/scrStates/scrStates.yy",},},
     {"id":{"name":"sprPlayerCarryUpper","path":"sprites/sprPlayerCarryUpper/sprPlayerCarryUpper.yy",},},
     {"id":{"name":"sprPlayerFallLower","path":"sprites/sprPlayerFallLower/sprPlayerFallLower.yy",},},
@@ -61,6 +63,7 @@
     {"id":{"name":"sprPlayerRunUpper","path":"sprites/sprPlayerRunUpper/sprPlayerRunUpper.yy",},},
     {"id":{"name":"sprPlayerSkidLower","path":"sprites/sprPlayerSkidLower/sprPlayerSkidLower.yy",},},
     {"id":{"name":"sprPlayerSkidUpper","path":"sprites/sprPlayerSkidUpper/sprPlayerSkidUpper.yy",},},
+    {"id":{"name":"sprPlayerThrowUpper","path":"sprites/sprPlayerThrowUpper/sprPlayerThrowUpper.yy",},},
     {"id":{"name":"sprPlayerWalkLower","path":"sprites/sprPlayerWalkLower/sprPlayerWalkLower.yy",},},
     {"id":{"name":"sprPlayerWalkUpper","path":"sprites/sprPlayerWalkUpper/sprPlayerWalkUpper.yy",},},
     {"id":{"name":"sprSolidPlaceHolder","path":"sprites/sprSolidPlaceHolder/sprSolidPlaceHolder.yy",},},
@@ -74,6 +77,7 @@
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
     {"roomId":{"name":"rmTest01","path":"rooms/rmTest01/rmTest01.yy",},},
+    {"roomId":{"name":"rmTest02","path":"rooms/rmTest02/rmTest02.yy",},},
   ],
   "templateType":"game",
   "TextureGroups":[

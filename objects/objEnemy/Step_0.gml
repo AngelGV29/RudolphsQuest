@@ -1,5 +1,11 @@
 /// @description Actualiza el estado, movimiento y colisiones del enemigo
 
+//No actualizar una instancia retirada
+if (RemovedFromLevel)
+{
+    exit;
+}
+
 //Resolver la desaparición inesperada del portador
 if (Carrier != noone && !instance_exists(Carrier))
 {
@@ -11,6 +17,19 @@ OnGround = place_meeting(x, y + 1, objSolid);
 
 //Actualizar temporizador
 StateTimer += 1;
+
+//Procesar el proyectil sin ejecutar la física normal
+if (EnemyState == ENEMY_STATE.THROWN)
+{
+    UpdateThrownState();
+
+    if (!RemovedFromLevel)
+    {
+        image_xscale = 1;
+    }
+
+    exit;
+}
 
 //Ejecutar el estado actual
 switch (EnemyState)

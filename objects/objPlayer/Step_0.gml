@@ -19,15 +19,40 @@ var HammerPressed = keyboard_check_pressed(ord("X"));
 
 //Recoger un enemigo
 var PickupPressed = keyboard_check_pressed(ord("C"));
+//Elegir el lanzamiento parabólico
+var ThrowUpHeld = keyboard_check(vk_up);
 
 //Cálculos de dirección
 var MoveInput = RightHeld - LeftHeld;
 var InputMaxSpeed;
 
+//TEMPORAL PARA PRUEBAS:
+if (keyboard_check_pressed(ord("R"))){
+    room_restart();
+}
+
 //Actualizar invulnerabilidad
 if (InvulnerabilityTimer > 0)
 {
     InvulnerabilityTimer -= 1;
+}
+
+//Actualizar la recuperación del lanzamiento
+if (ActionState == PLAYER_ACTION_STATE.THROWING)
+{
+    ThrowVisualTimer = max(
+        ThrowVisualTimer - 1,
+        0
+    );
+
+    if (ThrowVisualTimer == 0)
+    {
+        ActionState = PLAYER_ACTION_STATE.NORMAL;
+    }
+}
+else
+{
+    ThrowVisualTimer = 0;
 }
 
 //Actualizar estado de daño
@@ -80,12 +105,6 @@ if (!CanControl)
 if (!instance_exists(CarriedEnemy))
 {
     CarriedEnemy = noone;
-}
-
-//Intentar recoger
-if (CanControl && PickupPressed)
-{
-    TryPickupEnemy();
 }
 
 //Iniciar el martillazo
@@ -215,14 +234,35 @@ HSpeed += clamp(
     CurrentAccel
 );
 
-//Conservar la orientación durante el martillazo
+//Conservar la orientación durante los ataques
 if (ActionState == PLAYER_ACTION_STATE.HAMMER)
 {
     Facing = HammerFacing;
 }
+else if (ActionState == PLAYER_ACTION_STATE.THROWING)
+{
+    Facing = ThrowFacing;
+}
 else if (MoveInput != 0)
 {
     Facing = sign(MoveInput);
+}
+
+//Recoger o lanzar con la misma tecla
+if (
+    CanControl
+    && PickupPressed
+    && ActionState == PLAYER_ACTION_STATE.NORMAL
+)
+{
+    if (instance_exists(CarriedEnemy))
+    {
+        TryThrowEnemy(ThrowUpHeld);
+    }
+    else
+    {
+        TryPickupEnemy();
+    }
 }
 
 
@@ -478,6 +518,34 @@ image_xscale = Facing;
 //Usar el torso de locomoción salvo que una acción lo reemplace
 UpperOverrideSprite = -1;
 UpperOverrideFrame = 0;
+
+//Mostrar el gesto del lanzamiento
+if (
+    ActionState == PLAYER_ACTION_STATE.THROWING
+    && ThrowVisualTimer > 0
+)
+{
+    var ThrowFrameCount =
+        sprite_get_number(ThrowUpperSprite);
+
+    var ThrowProgress =
+        (ThrowVisualFrames - ThrowVisualTimer)
+        / ThrowVisualFrames;
+
+    UpperOverrideSprite = ThrowUpperSprite;
+
+    UpperOverrideFrame = min(
+        floor(ThrowProgress * ThrowFrameCount),
+        ThrowFrameCount - 1
+    );
+}
+
+//Mostrar el torso de carga
+if (instance_exists(CarriedEnemy))
+{
+    UpperOverrideSprite = sprPlayerCarryUpper;
+    UpperOverrideFrame = 0;
+}
 
 //Reemplazar únicamente el torso durante el martillazo
 if (ActionState == PLAYER_ACTION_STATE.HAMMER)

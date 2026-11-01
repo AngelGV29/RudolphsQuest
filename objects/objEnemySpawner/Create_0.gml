@@ -14,16 +14,16 @@ SpawnReady = true;
 SpawnX = x;
 SpawnY = y;
 
-//Área en la que aparece
-ActivateRangeX = 256;
-ActivateRangeY = 144;
+//Área en la que aparece el enemigo
+ActivateRangeX = 480;
+ActivateRangeY = 256;
 
 //Distancia necesaria para permitir otro respawn
-ResetRangeX = 384;
-ResetRangeY = 240;
+ResetRangeX = 560;
+ResetRangeY = 320;
 
 //Área máxima de actividad
-DespawnRangeX = 480;
+DespawnRangeX = 560;
 DespawnRangeY = 320;
 
 //Margen inferior de la habitación

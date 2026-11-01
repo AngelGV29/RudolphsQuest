@@ -56,3 +56,30 @@ if (ShowHammerHitbox && HammerActive)
     draw_set_alpha(1);
     draw_set_color(c_white);
 }
+
+//Mostrar la zona de recogida
+if (ShowPickupArea)
+{
+    draw_set_alpha(0.20);
+    draw_set_color(c_lime);
+
+    draw_rectangle(
+        bbox_left - PickupRange,
+        bbox_bottom - PickupHeight,
+        bbox_right + PickupRange,
+        bbox_bottom + PickupHeight,
+        false
+    );
+
+    draw_set_alpha(1);
+
+    draw_rectangle(
+        bbox_left - PickupRange,
+        bbox_bottom - PickupHeight,
+        bbox_right + PickupRange,
+        bbox_bottom + PickupHeight,
+        true
+    );
+
+    draw_set_color(c_white);
+}

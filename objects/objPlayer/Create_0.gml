@@ -31,6 +31,7 @@ VSubPixel = 0;
 
 Facing = 1; //Indica hacia donde está mirando el jugador: -1 izquierda y 1 derecha
 HammerFacing = Facing; //Dirección conservada durante el martillazo
+ThrowFacing = Facing;
 OnGround = false; //Indica si el jugador está en el suelo
 
 //Duración y contador del coyote tume
@@ -96,15 +97,24 @@ HammerUpperFrame = 0;
 //Enemigo actualmente sujeto
 CarriedEnemy = noone;
 
-//Alcance para recoger desde los lados
-PickupRange = 10;
-
-//Diferencia vertical permitida entre los pies
-PickupHeight = 8;
+//Recogida del enemigo
+PickupRange = 10;//Alcance para recoger desde los lados
+PickupHeight = 8; //Diferencia vertical permitida entre los pies
+ShowPickupArea = true; //Mostrar el alcance de recogida durante las pruebas
 
 //Posición visual del enemigo respecto a Rudolph
 CarryOffsetX = 10;
-CarryOffsetY = -16;
+CarryOffsetY = -10;
+
+//Lanzamiento del enemigo
+ThrowSpeed = 3; //Velocidad base horizontal del lanzamiento
+ThrowMoveFactor = 1; //Proporción de movimiento horizontal transferida
+ThrowArcSpeed = 6.5; //Impulso vertical del lanzamiento parabólico
+
+//Animación visual del lanzamiento
+ThrowUpperSprite = sprPlayerThrowUpper;
+ThrowVisualFrames = 20;
+ThrowVisualTimer = 0;
 
 //Parte superior correspondiente a la locomoción
 MoveUpperSprite = sprPlayerIdleUpper; //Sprite superior que corresponde a la locomoción actual
@@ -157,6 +167,8 @@ TakeDamage = function(DamageAmount, SourceX)
 
     //Soltar solo si el daño fue aceptado
     DropCarriedEnemy();
+    //Cancelar el gesto de lanzamiento al recibir daño
+    ThrowVisualTimer = 0;
     
     Hp = max(
         Hp - DamageAmount,
@@ -429,5 +441,91 @@ TryPickupEnemy = function()
 
     BestEnemy.ChangeState(ENEMY_STATE.CARRIED);
 
+    return true;
+};
+
+//Lanzar el enemigo sujeto
+TryThrowEnemy = function(UseArc)
+{
+    if (ActionState != PLAYER_ACTION_STATE.NORMAL)
+    {
+        return false;
+    }
+
+    var Enemy = CarriedEnemy;
+
+    if (!instance_exists(Enemy))
+    {
+        CarriedEnemy = noone;
+        return false;
+    }
+
+    if (Enemy.Carrier != id)
+    {
+        CarriedEnemy = noone;
+        return false;
+    }
+
+    //Actualizar la posición de salida
+    Enemy.x = round(
+        x + CarryOffsetX * Facing
+    );
+
+    Enemy.y = round(
+        y + CarryOffsetY
+    );
+
+    //Transferir solo el movimiento favorable
+    var ForwardSpeed = max(
+        HSpeed * Facing,
+        0
+    );
+
+    var LaunchSpeed =
+        ThrowSpeed
+        + ForwardSpeed * ThrowMoveFactor;
+
+    //Romper el vínculo sin utilizar DetachCarrier
+    CarriedEnemy = noone;
+    Enemy.Carrier = noone;
+
+    Enemy.ThrowOwner = id;
+
+    if (UseArc)
+    {
+        Enemy.ThrowMode = THROW_MODE.ARC;
+    }
+    else
+    {
+        Enemy.ThrowMode = THROW_MODE.HORIZONTAL;
+    }
+
+    Enemy.ChangeState(ENEMY_STATE.THROWN);
+
+    Enemy.Facing = Facing;
+    
+
+    if (UseArc)
+    {
+        Enemy.HSpeed = (LaunchSpeed * 0.9) * Facing;
+        Enemy.VSpeed = -ThrowArcSpeed;
+    }
+    else
+    {
+        Enemy.HSpeed = LaunchSpeed * Facing;
+        Enemy.VSpeed = 0;
+    }
+
+    Enemy.HSubPixel = 0;
+    Enemy.VSubPixel = 0;
+    Enemy.OnGround = false;
+
+    //Guardar la orientación del lanzamiento
+    ThrowFacing = Facing;
+    
+    //Iniciar la recuperación del lanzamiento
+    ThrowVisualTimer = ThrowVisualFrames;
+    ActionState = PLAYER_ACTION_STATE.THROWING;
+    
     return true;
 };
