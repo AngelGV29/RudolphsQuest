@@ -495,7 +495,6 @@ UpdateThrownState = function()
     //Detectar impactos desde la posición inicial
     if (CheckThrownImpact())
     {
-		audio_play_sound(sndEnemyImpact, 1, false);
         return;
     }
 
@@ -553,7 +552,6 @@ UpdateThrownState = function()
 
             if (CheckThrownImpact())
             {
-				audio_play_sound(sndEnemyImpact, 1, false);
                 return;
             }
         }
