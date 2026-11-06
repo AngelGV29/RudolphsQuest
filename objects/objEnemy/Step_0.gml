@@ -190,6 +190,8 @@ if (
                 Player,
                 PlayerSide
             );
+			
+			audio_play_sound(sndDamagePlayer, 1, false);
         }
     }
 }
