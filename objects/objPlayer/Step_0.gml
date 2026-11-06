@@ -76,6 +76,8 @@ if (ActionState == PLAYER_ACTION_STATE.DEAD)
 
     if (DeathTimer <= 0)
     {
+		audio_play_sound(sndGameOver, 1, false);
+		
         room_restart();
         exit;
     }
@@ -115,6 +117,7 @@ if (
 )
 {
     StartHammerAttack();
+	audio_play_sound(sndAttackPlayer, 1, false);
 }
 
 //Actualizar el martillazo
@@ -258,10 +261,18 @@ if (
     if (instance_exists(CarriedEnemy))
     {
         TryThrowEnemy(ThrowUpHeld);
+		audio_play_sound(sndThrowEnemy, 1, false);
     }
     else
     {
-        TryPickupEnemy();
+        // Guardamos si realmente logró recoger a un enemigo
+        var DidPickup = TryPickupEnemy();
+
+        // Solo si la función devolvió true (es decir, sí agarró a alguien), suena el audio
+        if (DidPickup)
+        {
+		    audio_play_sound(sndPickUpTheEnemy, 1, false);
+        }
     }
 }
 
@@ -298,6 +309,8 @@ if (JumpBufferTimer > 0 && CoyoteTimer > 0)
     {
         VSpeed *= JumpCutMultiplier;
     }
+	
+	audio_play_sound(sndJumpPlayer, 1, false);
 }
 
 
