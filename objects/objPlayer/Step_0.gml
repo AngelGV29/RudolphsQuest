@@ -74,10 +74,11 @@ if (ActionState == PLAYER_ACTION_STATE.DEAD)
 {
     DeathTimer -= 1;
 
+    
     if (DeathTimer <= 0)
     {
-		audio_play_sound(sndGameOver, 1, false);
-		
+        audio_play_sound(sndGameOver, 1, false);
+        while (audio_is_playing(sndGameOver))
         room_restart();
         exit;
     }
