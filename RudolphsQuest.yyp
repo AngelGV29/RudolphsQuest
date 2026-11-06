@@ -101,8 +101,8 @@
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
-    {"roomId":{"name":"rmTest02","path":"rooms/rmTest02/rmTest02.yy",},},
     {"roomId":{"name":"rmTest01","path":"rooms/rmTest01/rmTest01.yy",},},
+    {"roomId":{"name":"rmTest02","path":"rooms/rmTest02/rmTest02.yy",},},
   ],
   "templateType":"game",
   "TextureGroups":[
