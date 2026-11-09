@@ -7,7 +7,7 @@ MaxRunSpeed = 3.10;
 AirMaxSpeed = MaxWalkSpeed;
 
 //Aceleración, frenado y giro en el suelo
-GroundAccel = 0.2;
+GroundAccel = 0.10;
 GroundDecel = 0.2;
 GroundTurnAccel = 0.2;
 
@@ -17,7 +17,7 @@ AirDecel = 0.01;
 AirTurnAccel = 0.15;
 
 //Impulso de salto, gravedad y límite de caida
-JumpSpeed = 5;
+JumpSpeed = 5.1;
 Gravity = 0.18;
 MaxFallSpeed = 5.9;
 
