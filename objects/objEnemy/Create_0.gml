@@ -33,8 +33,10 @@ StateMaskNormal = mask_index;
 
 StateSpriteFlattened = -1;
 StateMaskFlattened = -1;
-
 StateSpriteWaking = -1;
+//Aspecto y duración del efecto de derrota
+DefeatSprite = -1;
+DefeatFrames = 18;
 
 //Duración del aplastamiento y la advertencia
 FlattenedFrames = 240; //4 segundos
@@ -278,7 +280,7 @@ OnWallHit = function()
 //Comprobar si la máscara del enemigo está apoyada
 HasGround = function()
 {
-    return place_meeting(x, y + 1, objSolid);
+    return CheckGround();
 };
 
 //Reacción ejecutada después de dañar al jugador
@@ -296,10 +298,31 @@ RemoveFromLevel = function(PermanentlyDefeated)
 
     RemovedFromLevel = true;
 
-    if (PermanentlyDefeated)
+    //Representar una derrota real
+if (PermanentlyDefeated)
+{
+    EnemyState = ENEMY_STATE.DEFEATED;
+
+    if (DefeatSprite != -1)
     {
-        EnemyState = ENEMY_STATE.DEFEATED;
+        var DefeatEffect = instance_create_layer(
+            x,
+            y,
+            layer,
+            objEnemyDefeatEffect
+        );
+
+        DefeatEffect.sprite_index = DefeatSprite;
+        DefeatEffect.DurationFrames = DefeatFrames;
+
+        DefeatEffect.image_index = 0;
+        DefeatEffect.image_speed = 0;
+        DefeatEffect.image_xscale = 1;
+        DefeatEffect.image_yscale = 1;
+        DefeatEffect.image_alpha = 1;
+        DefeatEffect.image_blend = c_white;
     }
+}
 
     var Player = Carrier;
     Carrier = noone;
@@ -439,7 +462,7 @@ ReceiveThrownHit = function(Projectile)
 CheckThrownImpact = function()
 {
     //Los sólidos consumen el proyectil
-    if (place_meeting(x, y, objSolid))
+    if (CheckSolid(x, y))
     {
         RemoveFromLevel(true);
         return true;
@@ -543,18 +566,32 @@ UpdateThrownState = function()
             MoveIndex += 1
         )
         {
-            x = StartX + round(
+            var NextX = StartX + round(
                 MoveX * MoveIndex / MoveSteps
             );
-
-            y = StartY + round(
+       
+            var NextY = StartY + round(
                 MoveY * MoveIndex / MoveSteps
             );
-
+       
+            //Una superficie semisólida consume el proyectil al descender
+            if (
+                NextY > y
+                && CheckSemi(NextX, NextY)
+            )
+            {
+                RemoveFromLevel(true);
+                audio_play_sound(sndEnemyImpact, 1, false);
+                return;
+            }
+       
+            x = NextX;
+            y = NextY;
+       
             if (CheckThrownImpact())
             {
-				audio_play_sound(sndEnemyImpact, 1, false);
-                return;
+               audio_play_sound(sndEnemyImpact, 1, false);
+               return;
             }
         }
     }
