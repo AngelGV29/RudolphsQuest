@@ -17,6 +17,10 @@ StateMaskFlattened = sprWildGoblinFlattenedMask;
 
 StateSpriteWaking = sprWildGoblinWakingPlaceholder;
 
+//Efecto visual de derrota
+DefeatSprite = sprWildGoblinDefeated;
+DefeatFrames = 18;
+
 //Propiedades del duende
 ContactDamage = 1;
 MoveSpeed = 0.50;

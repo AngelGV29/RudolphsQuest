@@ -64,6 +64,9 @@ KnockbackVSpeed = 1.5;
 //Muerte
 DeathFrames = 45;
 DeathTimer = 0;
+//Control del sonido previo al reinicio
+GameOverStarted = false;
+GameOverSound = -1;
 
 //Duración de las fases del martillazo
 HammerStartupFrames = 4;
@@ -204,10 +207,12 @@ TakeDamage = function(DamageAmount, SourceX)
 
     if (Hp <= 0)
     {
-        ActionState =
-            PLAYER_ACTION_STATE.DEAD;
-
+        ActionState = PLAYER_ACTION_STATE.DEAD;
+    
         DeathTimer = DeathFrames;
+    
+        GameOverStarted = false;
+        GameOverSound = -1;
     }
     else
     {
@@ -246,6 +251,7 @@ StartHammerAttack = function()
     HammerUpperFrame = 0;
 
     HammerAttackId += 1;
+    audio_play_sound(sndAttackPlayer, 1, false);
 
     return true;
 };
@@ -266,6 +272,7 @@ UpdateHammerHitbox = function()
         HammerHitLeft = bbox_left - HammerRange;
         HammerHitRight = bbox_left + 2;
     }
+    
 };
 
 //Golpea todos los enemigos dentro de la hitbox

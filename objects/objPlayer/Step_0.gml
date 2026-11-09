@@ -72,15 +72,42 @@ if (ActionState == PLAYER_ACTION_STATE.HURT)
 //Actualizar muerte
 if (ActionState == PLAYER_ACTION_STATE.DEAD)
 {
-    DeathTimer -= 1;
+    if (DeathTimer > 0)
+    {
+        DeathTimer -= 1;
+    }
 
-    
     if (DeathTimer <= 0)
     {
-        audio_play_sound(sndGameOver, 1, false);
-        while (audio_is_playing(sndGameOver))
-        room_restart();
-        exit;
+        if (!GameOverStarted)
+        {
+            //Reproducir el sonido una sola vez
+            GameOverStarted = true;
+
+            GameOverSound = audio_play_sound(
+                sndGameOver,
+                10,
+                false
+            );
+        }
+        else
+        {
+            //Reiniciar cuando termine esta reproducción
+            var RestartReady = GameOverSound == -1;
+
+            if (!RestartReady)
+            {
+                RestartReady = !audio_is_playing(
+                    GameOverSound
+                );
+            }
+
+            if (RestartReady)
+            {
+                room_restart();
+                exit;
+            }
+        }
     }
 }
 
@@ -118,7 +145,6 @@ if (
 )
 {
     StartHammerAttack();
-	audio_play_sound(sndAttackPlayer, 1, false);
 }
 
 //Actualizar el martillazo
@@ -138,7 +164,7 @@ else
 
 var WasOnGround = OnGround;
 
-OnGround = place_meeting(x, y + 1, objSolid);
+OnGround = CheckGround();
 
 //Guardar límite al salir de una plataforma
 if (WasOnGround && !OnGround)
@@ -345,7 +371,7 @@ if (HSpeed != 0)
 {
     var CheckDir = sign(HSpeed);
 
-    if (place_meeting(x + CheckDir, y, objSolid))
+    if (CheckSolid(x + CheckDir, y))
     {
         HSpeed = 0;
         HSubPixel = 0;
@@ -369,7 +395,8 @@ if (MoveX != 0)
 
     repeat (abs(MoveX))
     {
-        if (!place_meeting(x + StepX, y, objSolid))
+        //Avanzar horizontalmente si no existe un obstáculo
+        if (!CheckSolid(x + StepX, y))
         {
             x += StepX;
         }
@@ -403,7 +430,21 @@ if (MoveY != 0)
 
     repeat (abs(MoveY))
     {
-        if (!place_meeting(x, y + StepY, objSolid))
+        var VerticalBlocked = CheckSolid(
+            x,
+            y + StepY
+        );
+
+        //Los semisólidos solo bloquean al descender
+        if (!VerticalBlocked && StepY > 0)
+        {
+            VerticalBlocked = CheckSemi(
+                x,
+                y + StepY
+            );
+        }
+
+        if (!VerticalBlocked)
         {
             y += StepY;
         }
@@ -419,7 +460,7 @@ if (MoveY != 0)
 
 //13. Actualizar contacto con el suelo
 
-OnGround = place_meeting(x, y + 1, objSolid);
+OnGround = CheckGround();
 
 
 //14. Determinar estado de animación
