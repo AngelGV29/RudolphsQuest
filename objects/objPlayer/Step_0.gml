@@ -461,6 +461,8 @@ if (MoveY != 0)
 //13. Actualizar contacto con el suelo
 
 OnGround = CheckGround();
+//Recoger ítems después de resolver el movimiento
+CollectPickups(id, false);
 
 
 //14. Determinar estado de animación

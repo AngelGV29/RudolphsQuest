@@ -308,7 +308,7 @@ if (PermanentlyDefeated)
         var DefeatEffect = instance_create_layer(
             x,
             y,
-            layer,
+            "Effects",
             objEnemyDefeatEffect
         );
 
@@ -467,6 +467,9 @@ CheckThrownImpact = function()
         RemoveFromLevel(true);
         return true;
     }
+    
+    //Recoger ítems sin consumir el proyectil
+    CollectPickups(ThrowOwner, true);
 
     var EnemyCount = instance_number(objEnemy);
 
