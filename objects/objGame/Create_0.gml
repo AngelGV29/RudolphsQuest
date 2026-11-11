@@ -25,6 +25,9 @@ Lives = 3;
 //Recompensas configurables
 CoinPoints = 50;
 CoinsPerLife = 100;
+//Valor provisional del diamante
+DiamondPoints = 100;
+DiamondsPerLife = 50;
 
 //Comenzar un nuevo intento del nivel
 ResetLevelStats = function()
@@ -68,6 +71,31 @@ AddCoins = function(Amount)
 
     Coins = TotalCoins mod CoinsPerLife;
 
+    if (ExtraLives > 0)
+    {
+        AddLives(ExtraLives);
+    }
+};
+
+//Conceder diamantes y sus recompensas
+AddDiamonds = function(Amount)
+{
+    var Count = max(0, floor(Amount));
+
+    if (Count == 0)
+    {
+        return;
+    }
+
+    LevelDiamonds += Count;
+
+    AddScore(Count * DiamondPoints);
+    
+    var TotalDiamonds = Diamonds + Count;
+    var ExtraLives = TotalDiamonds div DiamondsPerLife;
+    
+    Diamonds = TotalDiamonds mod DiamondsPerLife;
+    
     if (ExtraLives > 0)
     {
         AddLives(ExtraLives);

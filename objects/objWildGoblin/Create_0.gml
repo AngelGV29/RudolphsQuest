@@ -7,6 +7,7 @@ event_inherited();
 CanBeFlattened = true;
 CanBeCarried = true;
 CanBeHitByThrown = true;
+DropsDiamond = true;
 
 //Recursos de cada estado
 StateSpriteNormal = sprWildGoblinPlaceholder;

@@ -11,7 +11,7 @@ MoveSpeed = 0;
 //Gravedad
 UsesGravity = true;
 Gravity = 0.16;
-MaxFallSpeed = 5.90;
+MaxFallSpeed = 5.9;
 
 //Movimiento
 HSpeed = 0;
@@ -62,6 +62,9 @@ RemovedFromLevel = false;
 
 //Vulnerabilidad a enemigos lanzados
 CanBeHitByThrown = false;
+
+//Recompensa al ser derrotado
+DropsDiamond = false;
 
 //Referencia al generador que creó al enemigo
 SpawnOwner = noone;
@@ -302,6 +305,7 @@ RemoveFromLevel = function(PermanentlyDefeated)
 if (PermanentlyDefeated)
 {
     EnemyState = ENEMY_STATE.DEFEATED;
+    DropDiamond();
 
     if (DefeatSprite != -1)
     {
@@ -428,6 +432,32 @@ UpdateCarriedState = function()
     {
         ChangeState(ENEMY_STATE.WAKING);
     }
+};
+
+//Crear el diamante correspondiente a un enemigo derrotado
+DropDiamond = function()
+{
+    if (!DropsDiamond)
+    {
+        return;
+    }
+
+    var DropX = (bbox_left + bbox_right) * 0.5;
+    var DropY = bbox_bottom;
+
+    var Drop = instance_create_layer(
+        DropX,
+        DropY,
+        "Pickups",
+        objDiamond
+    );
+
+    //Buscar una posición libre cercana
+    var Positioned = ResolveSolidOverlap(Drop, 32);
+
+    //El generador decide el impulso inicial
+    Drop.HSpeed = random_range(-1.2, 1.2);
+    Drop.VSpeed = -2;
 };
 
 //Recibir el impacto de un enemigo lanzado
