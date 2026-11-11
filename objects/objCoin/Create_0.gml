@@ -10,6 +10,7 @@ image_speed = 0;
 ApplyReward = function(Game, Player)
 {
     Game.AddCoins(1);
+	audio_play_sound(sndCollectACoin, 1, false);
 
     return true;
 };
