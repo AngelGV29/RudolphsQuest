@@ -23,6 +23,7 @@ image_speed = 0;
 ApplyReward = function(Game, Player)
 {
     Game.AddDiamonds(1);
+	audio_play_sound(sndCollectDiamond, 1, false);
 
     return true;
 };
