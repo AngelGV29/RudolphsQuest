@@ -1,13 +1,13 @@
 /// @description Inicializa el movimiento básico del jugador
 //Límites de velocidad horizontal
-MaxWalkSpeed = 1.55;
-MaxRunSpeed = 3.10;
+MaxWalkSpeed = 1.75;
+MaxRunSpeed = 3.5;
 
 //Límite horizontal conservado durante el salto
 AirMaxSpeed = MaxWalkSpeed;
 
 //Aceleración, frenado y giro en el suelo
-GroundAccel = 0.10;
+GroundAccel = 0.05;
 GroundDecel = 0.2;
 GroundTurnAccel = 0.2;
 
@@ -17,8 +17,8 @@ AirDecel = 0.01;
 AirTurnAccel = 0.15;
 
 //Impulso de salto, gravedad y límite de caida
-JumpSpeed = 5.1;
-Gravity = 0.18;
+JumpSpeed = 4.75;
+Gravity = 0.16;
 MaxFallSpeed = 5.9;
 
 //Velocidad horizontal y vertical actuales
