@@ -7,6 +7,7 @@ event_inherited();
 CanBeFlattened = true;
 CanBeCarried = true;
 CanBeHitByThrown = true;
+DropsDiamond = true;
 
 //Recursos de cada estado
 StateSpriteNormal = sprWildGoblinPlaceholder;
@@ -16,6 +17,10 @@ StateSpriteFlattened = sprWildGoblinFlattenedPlaceholder;
 StateMaskFlattened = sprWildGoblinFlattenedMask;
 
 StateSpriteWaking = sprWildGoblinWakingPlaceholder;
+
+//Efecto visual de derrota
+DefeatSprite = sprWildGoblinDefeated;
+DefeatFrames = 18;
 
 //Propiedades del duende
 ContactDamage = 1;

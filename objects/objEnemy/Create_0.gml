@@ -11,7 +11,7 @@ MoveSpeed = 0;
 //Gravedad
 UsesGravity = true;
 Gravity = 0.16;
-MaxFallSpeed = 5.90;
+MaxFallSpeed = 5.9;
 
 //Movimiento
 HSpeed = 0;
@@ -33,8 +33,10 @@ StateMaskNormal = mask_index;
 
 StateSpriteFlattened = -1;
 StateMaskFlattened = -1;
-
 StateSpriteWaking = -1;
+//Aspecto y duración del efecto de derrota
+DefeatSprite = -1;
+DefeatFrames = 18;
 
 //Duración del aplastamiento y la advertencia
 FlattenedFrames = 240; //4 segundos
@@ -60,6 +62,9 @@ RemovedFromLevel = false;
 
 //Vulnerabilidad a enemigos lanzados
 CanBeHitByThrown = false;
+
+//Recompensa al ser derrotado
+DropsDiamond = false;
 
 //Referencia al generador que creó al enemigo
 SpawnOwner = noone;
@@ -278,7 +283,7 @@ OnWallHit = function()
 //Comprobar si la máscara del enemigo está apoyada
 HasGround = function()
 {
-    return place_meeting(x, y + 1, objSolid);
+    return CheckGround();
 };
 
 //Reacción ejecutada después de dañar al jugador
@@ -296,10 +301,32 @@ RemoveFromLevel = function(PermanentlyDefeated)
 
     RemovedFromLevel = true;
 
-    if (PermanentlyDefeated)
+    //Representar una derrota real
+if (PermanentlyDefeated)
+{
+    EnemyState = ENEMY_STATE.DEFEATED;
+    DropDiamond();
+
+    if (DefeatSprite != -1)
     {
-        EnemyState = ENEMY_STATE.DEFEATED;
+        var DefeatEffect = instance_create_layer(
+            x,
+            y,
+            "Effects",
+            objEnemyDefeatEffect
+        );
+
+        DefeatEffect.sprite_index = DefeatSprite;
+        DefeatEffect.DurationFrames = DefeatFrames;
+
+        DefeatEffect.image_index = 0;
+        DefeatEffect.image_speed = 0;
+        DefeatEffect.image_xscale = 1;
+        DefeatEffect.image_yscale = 1;
+        DefeatEffect.image_alpha = 1;
+        DefeatEffect.image_blend = c_white;
     }
+}
 
     var Player = Carrier;
     Carrier = noone;
@@ -407,6 +434,32 @@ UpdateCarriedState = function()
     }
 };
 
+//Crear el diamante correspondiente a un enemigo derrotado
+DropDiamond = function()
+{
+    if (!DropsDiamond)
+    {
+        return;
+    }
+
+    var DropX = (bbox_left + bbox_right) * 0.5;
+    var DropY = bbox_bottom;
+
+    var Drop = instance_create_layer(
+        DropX,
+        DropY,
+        "Pickups",
+        objDiamond
+    );
+
+    //Buscar una posición libre cercana
+    var Positioned = ResolveSolidOverlap(Drop, 32);
+
+    //El generador decide el impulso inicial
+    Drop.HSpeed = random_range(-1.2, 1.2);
+    Drop.VSpeed = -2;
+};
+
 //Recibir el impacto de un enemigo lanzado
 ReceiveThrownHit = function(Projectile)
 {
@@ -439,11 +492,14 @@ ReceiveThrownHit = function(Projectile)
 CheckThrownImpact = function()
 {
     //Los sólidos consumen el proyectil
-    if (place_meeting(x, y, objSolid))
+    if (CheckSolid(x, y))
     {
         RemoveFromLevel(true);
         return true;
     }
+    
+    //Recoger ítems sin consumir el proyectil
+    CollectPickups(ThrowOwner, true);
 
     var EnemyCount = instance_number(objEnemy);
 
@@ -495,6 +551,7 @@ UpdateThrownState = function()
     //Detectar impactos desde la posición inicial
     if (CheckThrownImpact())
     {
+		audio_play_sound(sndEnemyImpact, 1, false);
         return;
     }
 
@@ -542,17 +599,32 @@ UpdateThrownState = function()
             MoveIndex += 1
         )
         {
-            x = StartX + round(
+            var NextX = StartX + round(
                 MoveX * MoveIndex / MoveSteps
             );
-
-            y = StartY + round(
+       
+            var NextY = StartY + round(
                 MoveY * MoveIndex / MoveSteps
             );
-
+       
+            //Una superficie semisólida consume el proyectil al descender
+            if (
+                NextY > y
+                && CheckSemi(NextX, NextY)
+            )
+            {
+                RemoveFromLevel(true);
+                audio_play_sound(sndEnemyImpact, 1, false);
+                return;
+            }
+       
+            x = NextX;
+            y = NextY;
+       
             if (CheckThrownImpact())
             {
-                return;
+               audio_play_sound(sndEnemyImpact, 1, false);
+               return;
             }
         }
     }

@@ -13,7 +13,7 @@ if (Carrier != noone && !instance_exists(Carrier))
 }
 
 //Comprobar el suelo
-OnGround = place_meeting(x, y + 1, objSolid);
+OnGround = CheckGround();
 
 //Actualizar temporizador
 StateTimer += 1;
@@ -99,7 +99,7 @@ if (MoveX != 0)
 
     repeat (abs(MoveX))
     {
-        if (!place_meeting(x + StepX, y, objSolid))
+        if (!CheckSolid(x + StepX, y))
         {
             x += StepX;
         }
@@ -130,7 +130,21 @@ if (MoveY != 0)
 
     repeat (abs(MoveY))
     {
-        if (!place_meeting(x, y + StepY, objSolid))
+        var VerticalBlocked = CheckSolid(
+            x,
+            y + StepY
+        );
+
+        //Los semisólidos solo bloquean al descender
+        if (!VerticalBlocked && StepY > 0)
+        {
+            VerticalBlocked = CheckSemi(
+                x,
+                y + StepY
+            );
+        }
+
+        if (!VerticalBlocked)
         {
             y += StepY;
         }
@@ -144,7 +158,7 @@ if (MoveY != 0)
 }
 
 //Actualizar condiciones
-OnGround = place_meeting(x, y + 1, objSolid);
+OnGround = CheckGround();
 
 //Comprobar contacto dañino con el jugador
 if (
@@ -190,6 +204,8 @@ if (
                 Player,
                 PlayerSide
             );
+			
+			audio_play_sound(sndDamagePlayer, 1, false);
         }
     }
 }
