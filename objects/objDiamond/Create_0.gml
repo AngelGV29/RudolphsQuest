@@ -4,6 +4,8 @@ event_inherited();
 
 CanCollectByThrown = true;
 
+PickupSound = sndCollectDiamond;
+
 //Duraciones según los Steps configurados
 var StepsPerSecond = game_get_speed(gamespeed_fps);
 
@@ -23,7 +25,6 @@ image_speed = 0;
 ApplyReward = function(Game, Player)
 {
     Game.AddDiamonds(1);
-	audio_play_sound(sndCollectDiamond, 1, false);
 
     return true;
 };
