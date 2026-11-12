@@ -4,6 +4,8 @@ event_inherited();
 
 CanCollectByThrown = true;
 
+PickupSound = sndCollectDiamond;
+
 //Duraciones según los Steps configurados
 var StepsPerSecond = game_get_speed(gamespeed_fps);
 

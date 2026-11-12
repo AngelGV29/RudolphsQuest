@@ -64,6 +64,8 @@ KnockbackVSpeed = 1.5;
 //Muerte
 DeathFrames = 45;
 DeathTimer = 0;
+//Evitar resolver una misma muerte más de una vez
+DeathResolved = false;
 //Control del sonido previo al reinicio
 GameOverStarted = false;
 GameOverSound = -1;
@@ -116,7 +118,7 @@ ThrowArcSpeed = 6.5; //Impulso vertical del lanzamiento parabólico
 
 //Animación visual del lanzamiento
 ThrowUpperSprite = sprPlayerThrowUpper;
-ThrowVisualFrames = 20;
+ThrowVisualFrames = 15;
 ThrowVisualTimer = 0;
 
 //Parte superior correspondiente a la locomoción
@@ -211,6 +213,8 @@ TakeDamage = function(DamageAmount, SourceX)
     
         DeathTimer = DeathFrames;
     
+        DeathResolved = false;
+        
         GameOverStarted = false;
         GameOverSound = -1;
     }
@@ -226,6 +230,25 @@ TakeDamage = function(DamageAmount, SourceX)
     }
 
     return true;
+};
+
+//Recuperar salud y devolver la cantidad realmente recuperada
+RecoverHp = function(Amount)
+{
+    if (ActionState == PLAYER_ACTION_STATE.DEAD)
+    {
+        return 0;
+    }
+
+    var Recovery = max(0, floor(Amount));
+    var PreviousHp = Hp;
+
+    Hp = min(
+        Hp + Recovery,
+        MaxHp
+    );
+
+    return Hp - PreviousHp;
 };
 
 //Inicia un nuevo martillazo

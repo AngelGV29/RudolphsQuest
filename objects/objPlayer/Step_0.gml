@@ -104,7 +104,27 @@ if (ActionState == PLAYER_ACTION_STATE.DEAD)
 
             if (RestartReady)
             {
-                room_restart();
+                if (!DeathResolved)
+                {
+                    DeathResolved = true;
+            
+                    var Game = instance_find(objGame, 0);
+            
+                    if (instance_exists(Game))
+                    {
+                        Game.CompletePlayerDeath();
+                    }
+                    else
+                    {
+                        show_debug_message(
+                            "No existe objGame al resolver la muerte."
+                        );
+            
+                        //Respaldo para habitaciones de prueba sin controlador
+                        room_restart();
+                    }
+                }
+            
                 exit;
             }
         }

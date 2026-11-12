@@ -4,6 +4,8 @@ event_inherited();
 
 CanCollectByThrown = true;
 
+PickupSound = sndCollectACoin;
+
 image_speed = 0;
 
 //Entregar una moneda al controlador de partida
