@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"sndCollectBigHeart",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":1.2926757,
+  "exportDir":"",
+  "name":"sndCollectBigHeart",
+  "parent":{
+    "name":"Recoger gran corazon",
+    "path":"folders/Audio/Recoger gran corazon.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"sndCollectBigHeart.mp3",
+  "volume":1.0,
+}

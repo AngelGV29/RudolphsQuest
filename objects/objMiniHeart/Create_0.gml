@@ -12,7 +12,7 @@ HealAmount = 1;
 HasLifetime = false;
 
 //Sonido de recogida
-PickupSound = -1;
+PickupSound = sndCollectMiniHeart;
 
 image_speed = 0;
 
