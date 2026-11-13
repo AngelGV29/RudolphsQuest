@@ -10,7 +10,7 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":0.46256235,
+  "duration":0.5579592,
   "exportDir":"",
   "name":"sndCollectACoin",
   "parent":{
@@ -22,5 +22,5 @@
   "resourceVersion":"2.0",
   "sampleRate":44100,
   "soundFile":"sndCollectACoin.mp3",
-  "volume":0.7,
+  "volume":0.3,
 }

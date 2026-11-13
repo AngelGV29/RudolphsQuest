@@ -60,7 +60,7 @@
     },
     "name":"sprWildGoblinWakingPlaceholder",
     "playback":1,
-    "playbackSpeed":2.0,
+    "playbackSpeed":12.0,
     "playbackSpeedType":0,
     "resourceType":"GMSequence",
     "resourceVersion":"2.0",

@@ -12,7 +12,7 @@ LifeAmount = 1;
 HasLifetime = false;
 
 //Sonido de recogida
-PickupSound = -1;
+PickupSound = sndCollectBigHeart;
 
 image_speed = 0;
 

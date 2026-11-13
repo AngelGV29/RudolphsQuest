@@ -1,6 +1,6 @@
 {
   "$GMSound":"v2",
-  "%Name":"sndReward",
+  "%Name":"sndCollectMiniHeart",
   "audioGroupId":{
     "name":"audiogroup_default",
     "path":"audiogroups/audiogroup_default",
@@ -10,17 +10,17 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":1.5136281,
+  "duration":0.4572109,
   "exportDir":"",
-  "name":"sndReward",
+  "name":"sndCollectMiniHeart",
   "parent":{
-    "name":"Recompensa",
-    "path":"folders/Audio/Recompensa.yy",
+    "name":"Recoger mini corazon",
+    "path":"folders/Audio/Recoger mini corazon.yy",
   },
   "preload":false,
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"sndReward.mp3",
-  "volume":1.0,
+  "soundFile":"sndCollectMiniHeart.mp3",
+  "volume":0.5,
 }
