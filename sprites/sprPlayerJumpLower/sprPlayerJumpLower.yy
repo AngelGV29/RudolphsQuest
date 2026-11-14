@@ -28,7 +28,7 @@
   ],
   "name":"sprPlayerJumpLower",
   "nineSlice":null,
-  "origin":7,
+  "origin":9,
   "parent":{
     "name":"Rudolph",
     "path":"folders/Entidades/Vivos/Rudolph.yy",
@@ -96,7 +96,7 @@
     "visibleRange":null,
     "volume":1.0,
     "xorigin":32,
-    "yorigin":48,
+    "yorigin":44,
   },
   "swatchColours":null,
   "swfPrecision":0.5,
