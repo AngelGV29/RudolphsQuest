@@ -100,6 +100,7 @@
     {"id":{"name":"sprCoinPlaceholder","path":"sprites/sprCoinPlaceholder/sprCoinPlaceholder.yy",},},
     {"id":{"name":"sprCollisionTiles","path":"sprites/sprCollisionTiles/sprCollisionTiles.yy",},},
     {"id":{"name":"sprDiamondPlaceholder","path":"sprites/sprDiamondPlaceholder/sprDiamondPlaceholder.yy",},},
+    {"id":{"name":"Sprite31","path":"sprites/Sprite31/Sprite31.yy",},},
     {"id":{"name":"sprLargeHeartPlaceholder","path":"sprites/sprLargeHeartPlaceholder/sprLargeHeartPlaceholder.yy",},},
     {"id":{"name":"sprMiniHeartPlaceholder","path":"sprites/sprMiniHeartPlaceholder/sprMiniHeartPlaceholder.yy",},},
     {"id":{"name":"sprPlayerCarryUpper","path":"sprites/sprPlayerCarryUpper/sprPlayerCarryUpper.yy",},},
