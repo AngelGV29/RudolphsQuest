@@ -264,6 +264,8 @@ StartHammerAttack = function()
     {
         return false;
     }
+    
+    audio_play_sound(sndAttackPlayer, 1, false);
 
     //Guardar la dirección del ataque
     HammerFacing = Facing;
@@ -274,7 +276,6 @@ StartHammerAttack = function()
     HammerUpperFrame = 0;
 
     HammerAttackId += 1;
-    audio_play_sound(sndAttackPlayer, 1, false);
 
     return true;
 };
