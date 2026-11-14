@@ -307,8 +307,8 @@ if (
 {
     if (instance_exists(CarriedEnemy))
     {
+        audio_play_sound(sndThrowEnemy, 1, false);
         TryThrowEnemy(ThrowUpHeld);
-		audio_play_sound(sndThrowEnemy, 1, false);
     }
     else
     {
@@ -329,6 +329,7 @@ if (
 //Iniciar salto
 if (JumpBufferTimer > 0 && CoyoteTimer > 0)
 {
+    audio_play_sound(sndJumpPlayer, 1, false);
     if (OnGround)
     {
         AirMaxSpeed = max(
@@ -343,6 +344,7 @@ if (JumpBufferTimer > 0 && CoyoteTimer > 0)
             abs(HSpeed)
         );
     }
+    
 
     VSpeed = -JumpSpeed;
     VSubPixel = 0;
@@ -357,7 +359,7 @@ if (JumpBufferTimer > 0 && CoyoteTimer > 0)
         VSpeed *= JumpCutMultiplier;
     }
 	
-	audio_play_sound(sndJumpPlayer, 1, false);
+	
 }
 
 
