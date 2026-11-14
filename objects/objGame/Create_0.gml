@@ -38,6 +38,13 @@ PickupSoundVoices = [];
 PickupSoundMaxVoices = 4;
 PickupSoundGain = 0.55;
 
+//Aviso independiente de vida extra
+ExtraLifeSound = sndExtraLive;
+ExtraLifeSoundVoice = -1;
+
+ExtraLifeSoundPriority = 5;
+ExtraLifeSoundGain = 1;
+
 //Comenzar un nuevo intento del nivel
 ResetLevelStats = function()
 {
@@ -55,15 +62,45 @@ AddScore = function(Amount)
     LevelScore += Points;
 };
 
-//Añadir vidas sin superar el límite
+//Añadir vidas y avisar solamente si aumentaron
+//Conceder una recompensa de vidas y reproducir su aviso
 AddLives = function(Amount)
 {
     var Count = max(0, floor(Amount));
+
+    if (Count == 0)
+    {
+        return 0;
+    }
+
+    var PreviousLives = Lives;
 
     Lives = min(
         Lives + Count,
         MaxLives
     );
+
+    //El aviso representa la recompensa, incluso con 99 vidas
+    var CanPlaySound = true;
+
+    if (ExtraLifeSoundVoice != -1)
+    {
+        CanPlaySound = !audio_is_playing(
+            ExtraLifeSoundVoice
+        );
+    }
+
+    if (CanPlaySound && ExtraLifeSound != -1)
+    {
+        ExtraLifeSoundVoice = audio_play_sound(
+            ExtraLifeSound,
+            ExtraLifeSoundPriority,
+            false,
+            ExtraLifeSoundGain
+        );
+    }
+
+    return Lives - PreviousLives;
 };
 
 //Conceder monedas y sus recompensas
@@ -133,6 +170,17 @@ ResetRun = function()
     }
 
     PickupSoundVoices = [];
+    
+    //Detener el aviso de vida extra al restaurar la partida
+    if (ExtraLifeSoundVoice != -1)
+    {
+        if (audio_is_playing(ExtraLifeSoundVoice))
+        {
+            audio_stop_sound(ExtraLifeSoundVoice);
+        }
+    }
+    
+    ExtraLifeSoundVoice = -1;
 
     //Recursos acumulados
     Score = 0;

@@ -1,6 +1,6 @@
 {
   "$GMSound":"v2",
-  "%Name":"sndCollectBigHeart",
+  "%Name":"sndExtraLive",
   "audioGroupId":{
     "name":"audiogroup_default",
     "path":"audiogroups/audiogroup_default",
@@ -12,15 +12,15 @@
   "conversionMode":0,
   "duration":1.2926757,
   "exportDir":"",
-  "name":"sndCollectBigHeart",
+  "name":"sndExtraLive",
   "parent":{
-    "name":"Recoger gran corazon",
-    "path":"folders/Audio/Recoger gran corazon.yy",
+    "name":"Obtener una vida extra",
+    "path":"folders/Audio/Obtener una vida extra.yy",
   },
   "preload":false,
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"sndCollectBigHeart.mp3",
+  "soundFile":"sndExtraLive.mp3",
   "volume":1.0,
 }

@@ -14,8 +14,8 @@
   "exportDir":"",
   "name":"sndCollectACoin",
   "parent":{
-    "name":"Recoger moneda",
-    "path":"folders/Audio/Recoger moneda.yy",
+    "name":"Sonidos",
+    "path":"folders/Entidades/No vivos/Recogibles/Moneda/Sonidos.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

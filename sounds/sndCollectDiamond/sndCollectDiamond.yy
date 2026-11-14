@@ -14,8 +14,8 @@
   "exportDir":"",
   "name":"sndCollectDiamond",
   "parent":{
-    "name":"Recoger diamante",
-    "path":"folders/Audio/Recoger diamante.yy",
+    "name":"Sonidos",
+    "path":"folders/Entidades/No vivos/Recogibles/Diamante/Sonidos.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

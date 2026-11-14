@@ -14,8 +14,8 @@
   "exportDir":"",
   "name":"sndCollectMiniHeart",
   "parent":{
-    "name":"Recoger mini corazon",
-    "path":"folders/Audio/Recoger mini corazon.yy",
+    "name":"Sonidos",
+    "path":"folders/Entidades/No vivos/Recogibles/Mini corazon/Sonidos.yy",
   },
   "preload":false,
   "resourceType":"GMSound",
