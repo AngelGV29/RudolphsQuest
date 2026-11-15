@@ -3,28 +3,28 @@
 //1. Comprobar entradas
 
 //Caminar
-var LeftHeld = keyboard_check(vk_left);
-var RightHeld = keyboard_check(vk_right);
+var LeftHeld = keyboard_check(ord("A"));
+var RightHeld = keyboard_check(ord("D"));
 
 //Correr
-var RunHeld = keyboard_check(vk_control);
+var RunHeld = keyboard_check(vk_shift);
 
 //Saltar
-var JumpHeld = keyboard_check(ord("Z"));
-var JumpPressed = keyboard_check_pressed(ord("Z"));
-var JumpReleased = keyboard_check_released(ord("Z"));
+var JumpHeld = keyboard_check(vk_space);
+var JumpPressed = keyboard_check_pressed(vk_space);
+var JumpReleased = keyboard_check_released(vk_space);
 
 //Ataque con el martillo
-var HammerPressed = keyboard_check_pressed(ord("X"));
+var HammerPressed = keyboard_check_pressed(ord("J")) || mouse_check_button_pressed(mb_left);
 
 //Recoger un enemigo
-var PickupPressed = keyboard_check_pressed(ord("C"));
+var PickupPressed = keyboard_check_pressed(ord("K")) || mouse_check_button_pressed(mb_right);
 //Elegir el lanzamiento parabólico
-var ThrowUpHeld = keyboard_check(vk_up);
+var ThrowUpHeld = keyboard_check(ord("W"));
 
 //Cálculos de dirección
 var MoveInput = RightHeld - LeftHeld;
-var InputMaxSpeed;
+var InputMaxSpeed = 0;
 
 //TEMPORAL PARA PRUEBAS:
 if (keyboard_check_pressed(ord("R"))){
