@@ -12,14 +12,19 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"a859bf2f-0095-46c7-b0dd-821fdf39d38e","name":"a859bf2f-0095-46c7-b0dd-821fdf39d38e","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"cc8fd346-decd-4404-bf41-08eca585855c","name":"cc8fd346-decd-4404-bf41-08eca585855c","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"7f5b7262-dcd3-48dd-bca6-e2b19d6eab15","name":"7f5b7262-dcd3-48dd-bca6-e2b19d6eab15","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"b9a3ade4-076c-4814-bb3c-96cdf7ada644","name":"b9a3ade4-076c-4814-bb3c-96cdf7ada644","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"10ef5541-fea5-49bf-9788-9b9e8b787b0b","name":"10ef5541-fea5-49bf-9788-9b9e8b787b0b","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"76ddc733-65ff-4563-b38e-ed1572cdc69c","name":"76ddc733-65ff-4563-b38e-ed1572cdc69c","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"0c910cd5-d4c9-4d6f-9f77-b7774a16c582","name":"0c910cd5-d4c9-4d6f-9f77-b7774a16c582","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":8,
   "gridY":8,
   "height":16,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"73e283b8-2b8a-45fb-995b-28a9f5aa6073","blendMode":0,"displayName":"default","isLocked":false,"name":"73e283b8-2b8a-45fb-995b-28a9f5aa6073","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"6b0b242d-8b1f-4fd7-bce1-6bea1973f541","blendMode":0,"displayName":"default","isLocked":false,"name":"6b0b242d-8b1f-4fd7-bce1-6bea1973f541","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"sprCoinPlaceholder",
   "nineSlice":null,
@@ -49,7 +54,7 @@
     },
     "eventStubScript":null,
     "eventToFunction":{},
-    "length":1.0,
+    "length":6.0,
     "lockOrigin":false,
     "moments":{
       "$KeyframeStore<MomentsEventKeyframe>":"",
@@ -69,8 +74,23 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"a859bf2f-0095-46c7-b0dd-821fdf39d38e","path":"sprites/sprCoinPlaceholder/sprCoinPlaceholder.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"12acf522-c9ae-4566-aee7-ac5aa45f6e01","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"cc8fd346-decd-4404-bf41-08eca585855c","path":"sprites/sprCoinPlaceholder/sprCoinPlaceholder.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"5d79a9f1-cc94-4fd9-9c11-8d74d5deb29c","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"7f5b7262-dcd3-48dd-bca6-e2b19d6eab15","path":"sprites/sprCoinPlaceholder/sprCoinPlaceholder.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"3974dc5a-e77c-43a2-b9d1-109133f9a908","IsCreationKey":false,"Key":1.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"b9a3ade4-076c-4814-bb3c-96cdf7ada644","path":"sprites/sprCoinPlaceholder/sprCoinPlaceholder.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"910178fa-db96-4752-ba34-1ed8494cb21c","IsCreationKey":false,"Key":2.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"10ef5541-fea5-49bf-9788-9b9e8b787b0b","path":"sprites/sprCoinPlaceholder/sprCoinPlaceholder.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"4d26293c-4602-47ff-8e9f-9bb30ac19e96","IsCreationKey":false,"Key":3.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"76ddc733-65ff-4563-b38e-ed1572cdc69c","path":"sprites/sprCoinPlaceholder/sprCoinPlaceholder.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"50518ade-961a-4a34-88e6-90cb4f728835","IsCreationKey":false,"Key":4.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"0c910cd5-d4c9-4d6f-9f77-b7774a16c582","path":"sprites/sprCoinPlaceholder/sprCoinPlaceholder.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"05b62b54-49c3-4fad-960a-60cb0c6887f8","IsCreationKey":false,"Key":5.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

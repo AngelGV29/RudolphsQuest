@@ -19,7 +19,7 @@ BlinkInterval = max(
     round(StepsPerSecond * 0.1)
 );
 
-image_speed = 0;
+image_speed = 12;
 
 //Recompensa
 ApplyReward = function(Game, Player)
