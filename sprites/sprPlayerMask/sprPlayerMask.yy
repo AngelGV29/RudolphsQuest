@@ -1,10 +1,10 @@
 {
   "$GMSprite":"v2",
   "%Name":"sprPlayerMask",
-  "bboxMode":1,
+  "bboxMode":2,
   "bbox_bottom":23,
-  "bbox_left":0,
-  "bbox_right":13,
+  "bbox_left":4,
+  "bbox_right":9,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,

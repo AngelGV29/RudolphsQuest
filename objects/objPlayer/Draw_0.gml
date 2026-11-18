@@ -69,7 +69,7 @@ if (ShowPickupArea)
         bbox_right + PickupRange,
         bbox_bottom + PickupHeight,
         false
-    );
+    ); 
 
     draw_set_alpha(1);
 
