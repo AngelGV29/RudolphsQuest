@@ -6,8 +6,8 @@
   "name":"objSolid",
   "overriddenProperties":[],
   "parent":{
-    "name":"Bloque solido base",
-    "path":"folders/Entidades/No vivos/Bloques/Bloque solido base.yy",
+    "name":"Solido base",
+    "path":"folders/Entidades/No vivos/Bloques/Solido base.yy",
   },
   "parentObjectId":null,
   "persistent":false,

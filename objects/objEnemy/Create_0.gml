@@ -494,6 +494,41 @@ CheckThrownImpact = function()
     //Los sólidos consumen el proyectil
     if (CheckSolid(x, y))
     {
+        //Notificar los bloques antes de retirar el proyectil
+        var HitBlocks = ds_list_create();
+    
+        var BlockCount = collision_rectangle_list(
+            bbox_left,
+            bbox_top,
+            bbox_right,
+            bbox_bottom,
+            objBlock,
+            false,
+            true,
+            HitBlocks,
+            false
+        );
+    
+        for (
+            var BlockIndex = 0;
+            BlockIndex < BlockCount;
+            BlockIndex += 1
+        )
+        {
+            var Block = HitBlocks[| BlockIndex];
+    
+            if (instance_exists(Block))
+            {
+                Block.ReceiveBlockHit(
+                    id,
+                    BLOCK_HIT.THROWN,
+                    -1
+                );
+            }
+        }
+    
+        ds_list_destroy(HitBlocks);
+    
         RemoveFromLevel(true);
         return true;
     }
@@ -634,4 +669,34 @@ UpdateThrownState = function()
     {
         ChangeState(ENEMY_STATE.FLATTENED);
     }
+};
+
+//Recibir un impulso desde un bloque situado debajo
+ReceiveBlockBump = function(Impulse)
+{
+    if (
+        RemovedFromLevel
+        || Carrier != noone
+        || EnemyState == ENEMY_STATE.THROWN
+        || EnemyState == ENEMY_STATE.DEFEATED
+    )
+    {
+        return false;
+    }
+
+    //Aplastar únicamente a los enemigos compatibles
+    if (CanBeFlattened)
+    {
+        ChangeState(ENEMY_STATE.FLATTENED);
+
+        //Reiniciar también si ya estaba aplastado
+        StateTimer = 0;
+    }
+
+    //Aplicar el rebote independientemente del aplastamiento
+    VSpeed = -abs(Impulse);
+    VSubPixel = 0;
+    OnGround = false;
+
+    return true;
 };

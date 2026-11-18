@@ -39,6 +39,23 @@ Facing = -1;
 //Duración y contador de la defensa contra el martillo
 BlockFrames = 90;
 BlockTimer = 0;
+BlockActive = false;
+
+//Iniciar o reiniciar la defensa temporal
+StartBlockReaction = function()
+{
+    BlockTimer = BlockFrames;
+    BlockActive = true;
+
+    HSpeed = 0;
+    HSubPixel = 0;
+
+    sprite_index = StateSpriteBlock;
+    mask_index = StateMaskNormal;
+
+    image_index = 0;
+    image_speed = 1;
+};
 
 //Comprobar si hay suelo delante antes de avanzar
 HasGroundAhead = function()
@@ -66,34 +83,39 @@ HasGroundAhead = function()
 };
 
 //Avanzar constantemente y regresar antes de caer de un borde
+//Patrullar o permanecer temporalmente a la defensiva
 UpdateNormalState = function()
 {
-    //Mantenerse inmóvil y mostrar la defensa durante el impacto
-    if (BlockTimer > 0)
+    if (BlockActive)
     {
-        BlockTimer -= 1;
-
         HSpeed = 0;
         HSubPixel = 0;
 
-        sprite_index = StateSpriteBlock;
+        BlockTimer = max(BlockTimer - 1, 0);
+
+        if (BlockTimer > 0)
+        {
+            return;
+        }
+
+        //Restaurar la apariencia una sola vez al terminar
+        BlockActive = false;
+
+        sprite_index = StateSpriteNormal;
         mask_index = StateMaskNormal;
 
         image_index = 0;
         image_speed = 0;
-        return;
     }
-
-    //Recuperar el aspecto normal al terminar de bloquear
-    sprite_index = StateSpriteNormal;
-    mask_index = StateMaskNormal;
 
     //Invertir el sentido cuando no exista suelo por delante
     if (!HasGroundAhead())
     {
         Facing *= -1;
+
         HSpeed = 0;
         HSubPixel = 0;
+
         return;
     }
 
@@ -110,13 +132,11 @@ OnWallHit = function()
 //Resistir el martillazo sin cambiar al estado aplastado
 ReceiveHammerHit = function(AttackId, Attacker)
 {
-    //No procesar golpes después de retirarse ni mientras está sujeto
     if (RemovedFromLevel || Carrier != noone)
     {
         return false;
     }
 
-    //Evitar que el mismo martillazo reinicie la defensa
     if (LastHammerAttackId == AttackId)
     {
         return false;
@@ -124,23 +144,12 @@ ReceiveHammerHit = function(AttackId, Attacker)
 
     LastHammerAttackId = AttackId;
 
-    //Solo bloquear en la patrulla; los proyectiles conservan prioridad
     if (EnemyState != ENEMY_STATE.NORMAL)
     {
         return false;
     }
 
-    //Cancelar de inmediato el movimiento acumulado y actual
-    HSpeed = 0;
-    HSubPixel = 0;
-
-    //Mostrar la defensa durante un breve instante
-    BlockTimer = BlockFrames;
-    sprite_index = StateSpriteBlock;
-    mask_index = StateMaskNormal;
-
-    image_index = 0;
-    image_speed = 0;
+    StartBlockReaction();
 
     return true;
 };
@@ -161,4 +170,25 @@ OnPlayerDamaged = function(Player, PlayerSide)
 
         image_xscale = Facing;
     }
+};
+
+//Rebotar y erizarse sin quedar aplastado
+ReceiveBlockBump = function(Impulse)
+{
+    if (
+        RemovedFromLevel
+        || Carrier != noone
+        || EnemyState != ENEMY_STATE.NORMAL
+    )
+    {
+        return false;
+    }
+
+    StartBlockReaction();
+
+    VSpeed = -abs(Impulse);
+    VSubPixel = 0;
+    OnGround = false;
+
+    return true;
 };

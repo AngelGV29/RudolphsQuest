@@ -71,9 +71,9 @@ GameOverStarted = false;
 GameOverSound = -1;
 
 //Duración de las fases del martillazo
-HammerStartupFrames = 4;
-HammerActiveFrames = 5;
-HammerRecoveryFrames = 7;
+HammerStartupFrames = 6;
+HammerActiveFrames = 3;
+HammerRecoveryFrames = 12;
 
 //Control del martillazo actual
 HammerTimer = 0;
@@ -81,7 +81,7 @@ HammerAttackId = 0;
 HammerActive = false;
 
 //Dimensiones de la hitbox
-HammerRange = 14;
+HammerRange = 24;
 
 //Coordenadas actuales de la hitbox
 HammerHitLeft = 0;
@@ -325,6 +325,39 @@ PerformHammerHit = function()
             Enemy.ReceiveHammerHit(
                 HammerAttackId,
                 id
+            );
+        }
+    }
+    
+    //Buscar también bloques alcanzados por el martillo
+    ds_list_clear(HammerHitList);
+    
+    var BlockCount = collision_rectangle_list(
+        HammerHitLeft,
+        HammerHitTop,
+        HammerHitRight,
+        HammerHitBottom,
+        objBlock,
+        false,
+        true,
+        HammerHitList,
+        false
+    );
+    
+    for (
+        var BlockIndex = 0;
+        BlockIndex < BlockCount;
+        BlockIndex += 1
+    )
+    {
+        var Block = HammerHitList[| BlockIndex];
+    
+        if (instance_exists(Block))
+        {
+            Block.ReceiveBlockHit(
+                id,
+                BLOCK_HIT.HAMMER,
+                HammerAttackId
             );
         }
     }

@@ -6,7 +6,7 @@ CanCollectByThrown = true;
 
 PickupSound = sndCollectACoin;
 
-image_speed = 12;
+image_speed = 1;
 
 //Entregar una moneda al controlador de partida
 ApplyReward = function(Game, Player)

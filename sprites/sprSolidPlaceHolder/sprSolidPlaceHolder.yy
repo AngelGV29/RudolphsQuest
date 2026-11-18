@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"Bloque solido base",
-    "path":"folders/Entidades/No vivos/Bloques/Bloque solido base.yy",
+    "name":"Solido base",
+    "path":"folders/Entidades/No vivos/Bloques/Solido base.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

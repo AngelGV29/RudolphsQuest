@@ -472,6 +472,50 @@ if (MoveY != 0)
         }
         else
         {
+            //Activar bloques al golpearlos durante el ascenso
+            if (StepY < 0)
+            {
+                var HitBlocks = ds_list_create();
+        
+                var BlockCount = collision_rectangle_list(
+                    bbox_left,
+                    bbox_top - 1,
+                    bbox_right,
+                    bbox_top,
+                    objBlock,
+                    false,
+                    true,
+                    HitBlocks,
+                    false
+                );
+        
+                for (
+                    var BlockIndex = 0;
+                    BlockIndex < BlockCount;
+                    BlockIndex += 1
+                )
+                {
+                    var Block = HitBlocks[| BlockIndex];
+        
+                    if (!instance_exists(Block))
+                    {
+                        continue;
+                    }
+        
+                    //No activar bloques que no estén sobre la cabeza
+                    if (bbox_top >= Block.bbox_bottom)
+                    {
+                        Block.ReceiveBlockHit(
+                            id,
+                            BLOCK_HIT.BELOW,
+                            -1
+                        );
+                    }
+                }
+        
+                ds_list_destroy(HitBlocks);
+            }
+        
             VSpeed = 0;
             VSubPixel = 0;
             break;
