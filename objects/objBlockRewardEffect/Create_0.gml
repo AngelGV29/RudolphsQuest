@@ -1,6 +1,6 @@
 /// @description Inicializa la representación de una recompensa concedida
 
-EffectFrames = 20d;
+EffectFrames = 20;
 EffectTimer = 0;
 
 RiseSpeed = 0.75;
