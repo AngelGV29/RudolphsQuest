@@ -8,6 +8,11 @@ if (!variable_instance_exists(id, "ContentObject"))
     ContentObject = objCoin;
 }
 
+if (!variable_instance_exists(id, "ActivationSound"))
+{
+    ActivationSound = sndBlockActivate;
+}
+
 if (!variable_instance_exists(id, "ContentCount"))
 {
     ContentCount = 1;
@@ -165,6 +170,12 @@ ActivateBlock = function(Attacker, HitType)
     sprite_index = sprItemBlockActive;
     image_index = 0;
     image_speed = 0;
+    
+    //Sonar únicamente al aceptar una nueva activación
+    if (ActivationSound != -1 && ActivationSound != noone)
+    {
+        audio_play_sound(ActivationSound, 1, false);
+    }
 
     return true;
 };

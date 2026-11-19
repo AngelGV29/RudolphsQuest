@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"sndBlockBreak",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":0.60712016,
+  "exportDir":"",
+  "name":"sndBlockBreak",
+  "parent":{
+    "name":"Sonidos",
+    "path":"folders/Entidades/No vivos/Bloques/Bloque rompible/Sonidos.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"sndBlockBreak.wav",
+  "volume":1.0,
+}

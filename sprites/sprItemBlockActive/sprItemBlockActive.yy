@@ -31,8 +31,8 @@
   "nineSlice":null,
   "origin":9,
   "parent":{
-    "name":"Bloque Interactuable",
-    "path":"folders/Entidades/No vivos/Bloques/Bloque Interactuable.yy",
+    "name":"Bloque interactuable",
+    "path":"folders/Entidades/No vivos/Bloques/Bloque interactuable.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
