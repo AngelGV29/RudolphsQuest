@@ -19,6 +19,11 @@
     {"$GMFolder":"","%Name":"Recompensa","folderPath":"folders/Audio/Recompensa.yy","name":"Recompensa","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Efectos","folderPath":"folders/Efectos.yy","name":"Efectos","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Derrota de enemigos","folderPath":"folders/Efectos/Derrota de enemigos.yy","name":"Derrota de enemigos","resourceType":"GMFolder","resourceVersion":"2.0",},
+<<<<<<< Updated upstream
+=======
+    {"$GMFolder":"","%Name":"Recompensas de bloques","folderPath":"folders/Efectos/Recompensas de bloques.yy","name":"Recompensas de bloques","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Romper un bloque","folderPath":"folders/Efectos/Romper un bloque.yy","name":"Romper un bloque","resourceType":"GMFolder","resourceVersion":"2.0",},
+>>>>>>> Stashed changes
     {"$GMFolder":"","%Name":"Entidades","folderPath":"folders/Entidades.yy","name":"Entidades","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"No vivos","folderPath":"folders/Entidades/No vivos.yy","name":"No vivos","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Bloques","folderPath":"folders/Entidades/No vivos/Bloques.yy","name":"Bloques","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -105,6 +110,7 @@
     {"id":{"name":"sprMiniHeartPlaceholder","path":"sprites/sprMiniHeartPlaceholder/sprMiniHeartPlaceholder.yy",},},
     {"id":{"name":"sprPlayerCarryArm","path":"sprites/sprPlayerCarryArm/sprPlayerCarryArm.yy",},},
     {"id":{"name":"sprPlayerCarryUpper","path":"sprites/sprPlayerCarryUpper/sprPlayerCarryUpper.yy",},},
+    {"id":{"name":"sprPlayerDeadComplete","path":"sprites/sprPlayerDeadComplete/sprPlayerDeadComplete.yy",},},
     {"id":{"name":"sprPlayerFallLower","path":"sprites/sprPlayerFallLower/sprPlayerFallLower.yy",},},
     {"id":{"name":"sprPlayerFallUpper","path":"sprites/sprPlayerFallUpper/sprPlayerFallUpper.yy",},},
     {"id":{"name":"sprPlayerHammerUpper","path":"sprites/sprPlayerHammerUpper/sprPlayerHammerUpper.yy",},},
