@@ -1,10 +1,10 @@
 {
   "$GMSprite":"v2",
   "%Name":"sprPlayerMask",
-  "bboxMode":2,
+  "bboxMode":0,
   "bbox_bottom":23,
-  "bbox_left":4,
-  "bbox_right":9,
+  "bbox_left":0,
+  "bbox_right":5,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -14,8 +14,8 @@
   "frames":[
     {"$GMSpriteFrame":"v1","%Name":"1cd92436-5faf-41f7-8bc6-ec49f1a73e4a","name":"1cd92436-5faf-41f7-8bc6-ec49f1a73e4a","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
-  "gridX":1,
-  "gridY":1,
+  "gridX":3,
+  "gridY":12,
   "height":24,
   "HTile":false,
   "layers":[
@@ -75,7 +75,7 @@
     ],
     "visibleRange":null,
     "volume":1.0,
-    "xorigin":7,
+    "xorigin":3,
     "yorigin":24,
   },
   "swatchColours":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":14,
+  "width":6,
 }

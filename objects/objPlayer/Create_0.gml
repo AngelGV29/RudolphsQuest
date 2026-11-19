@@ -94,7 +94,6 @@ HammerHitList = ds_list_create();
 //Mostrar la hitbox del martillo durante las pruebas
 ShowHammerHitbox = true;
 
-
 //Sprite y fotograma independientes del torso atacante
 HammerUpperSprite = sprPlayerHammerUpper;
 HammerUpperFrame = 0;
@@ -108,18 +107,22 @@ PickupHeight = 8; //Diferencia vertical permitida entre los pies
 ShowPickupArea = true; //Mostrar el alcance de recogida durante las pruebas
 
 //Posición visual del enemigo respecto a Rudolph
-CarryOffsetX = 10;
-CarryOffsetY = -10;
+CarryOffsetX = 9;
+CarryOffsetY = -8;
 
 //Lanzamiento del enemigo
 ThrowSpeed = 3; //Velocidad base horizontal del lanzamiento
 ThrowMoveFactor = 1; //Proporción de movimiento horizontal transferida
 ThrowArcSpeed = 6.5; //Impulso vertical del lanzamiento parabólico
 
-//Animación visual del lanzamiento
-ThrowUpperSprite = sprPlayerThrowUpper;
-ThrowVisualFrames = 15;
-ThrowVisualTimer = 0;
+//Recuperación después de lanzar un enemigo
+ThrowRecoveryFrames = 15;
+ThrowRecoveryTimer = 0;
+
+//Volumen del golpe de cabeza contra sólidos comunes
+HeadBumpGain = 1;
+//Volumen cuando un bloque acepta el golpe y responde por su cuenta (el cero lo silencia)
+HeadBumpBlockGain = 0;
 
 //Parte superior correspondiente a la locomoción
 MoveUpperSprite = sprPlayerIdleUpper; //Sprite superior que corresponde a la locomoción actual
@@ -172,8 +175,8 @@ TakeDamage = function(DamageAmount, SourceX)
 
     //Soltar solo si el daño fue aceptado
     DropCarriedEnemy();
-    //Cancelar el gesto de lanzamiento al recibir daño
-    ThrowVisualTimer = 0;
+    //Cancelar la recuperación del lanzamiento al recibir daño
+    ThrowRecoveryTimer = 0;
     
     Hp = max(
         Hp - DamageAmount,
@@ -588,7 +591,7 @@ TryThrowEnemy = function(UseArc)
     ThrowFacing = Facing;
     
     //Iniciar la recuperación del lanzamiento
-    ThrowVisualTimer = ThrowVisualFrames;
+    ThrowRecoveryTimer = ThrowRecoveryFrames;
     ActionState = PLAYER_ACTION_STATE.THROWING;
     
     return true;

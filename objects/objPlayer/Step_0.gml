@@ -40,19 +40,19 @@ if (InvulnerabilityTimer > 0)
 //Actualizar la recuperación del lanzamiento
 if (ActionState == PLAYER_ACTION_STATE.THROWING)
 {
-    ThrowVisualTimer = max(
-        ThrowVisualTimer - 1,
+    ThrowRecoveryTimer = max(
+        ThrowRecoveryTimer - 1,
         0
     );
 
-    if (ThrowVisualTimer == 0)
+    if (ThrowRecoveryTimer == 0)
     {
         ActionState = PLAYER_ACTION_STATE.NORMAL;
     }
 }
 else
 {
-    ThrowVisualTimer = 0;
+    ThrowRecoveryTimer = 0;
 }
 
 //Actualizar estado de daño
@@ -475,8 +475,10 @@ if (MoveY != 0)
             //Activar bloques al golpearlos durante el ascenso
             if (StepY < 0)
             {
+                var BlockAcceptedHit = false;
+            
                 var HitBlocks = ds_list_create();
-        
+            
                 var BlockCount = collision_rectangle_list(
                     bbox_left,
                     bbox_top - 1,
@@ -488,7 +490,7 @@ if (MoveY != 0)
                     HitBlocks,
                     false
                 );
-        
+            
                 for (
                     var BlockIndex = 0;
                     BlockIndex < BlockCount;
@@ -496,24 +498,47 @@ if (MoveY != 0)
                 )
                 {
                     var Block = HitBlocks[| BlockIndex];
-        
+            
                     if (!instance_exists(Block))
                     {
                         continue;
                     }
-        
+            
                     //No activar bloques que no estén sobre la cabeza
                     if (bbox_top >= Block.bbox_bottom)
                     {
-                        Block.ReceiveBlockHit(
+                        var Accepted = Block.ReceiveBlockHit(
                             id,
                             BLOCK_HIT.BELOW,
                             -1
                         );
+            
+                        if (Accepted)
+                        {
+                            BlockAcceptedHit = true;
+                        }
                     }
                 }
-        
+            
                 ds_list_destroy(HitBlocks);
+            
+                //Elegir el volumen después de resolver las interacciones
+                var BumpGain = HeadBumpGain;
+            
+                if (BlockAcceptedHit)
+                {
+                    BumpGain = HeadBumpBlockGain;
+                }
+            
+                if (BumpGain > 0)
+                {
+                    audio_play_sound(
+                        sndHeadBump,
+                        1,
+                        false,
+                        BumpGain
+                    );
+                }
             }
         
             VSpeed = 0;
@@ -641,27 +666,6 @@ image_xscale = Facing;
 //Usar el torso de locomoción salvo que una acción lo reemplace
 UpperOverrideSprite = -1;
 UpperOverrideFrame = 0;
-
-//Mostrar el gesto del lanzamiento
-if (
-    ActionState == PLAYER_ACTION_STATE.THROWING
-    && ThrowVisualTimer > 0
-)
-{
-    var ThrowFrameCount =
-        sprite_get_number(ThrowUpperSprite);
-
-    var ThrowProgress =
-        (ThrowVisualFrames - ThrowVisualTimer)
-        / ThrowVisualFrames;
-
-    UpperOverrideSprite = ThrowUpperSprite;
-
-    UpperOverrideFrame = min(
-        floor(ThrowProgress * ThrowFrameCount),
-        ThrowFrameCount - 1
-    );
-}
 
 //Mostrar el torso de carga
 if (instance_exists(CarriedEnemy))
