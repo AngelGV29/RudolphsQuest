@@ -475,11 +475,10 @@ if (MoveY != 0)
             //Activar bloques al golpearlos durante el ascenso
             if (StepY < 0)
             {
-                
-                audio_play_sound(sndHeadBump, 1, false);
-                
+                var BlockAcceptedHit = false;
+            
                 var HitBlocks = ds_list_create();
-        
+            
                 var BlockCount = collision_rectangle_list(
                     bbox_left,
                     bbox_top - 1,
@@ -491,7 +490,7 @@ if (MoveY != 0)
                     HitBlocks,
                     false
                 );
-        
+            
                 for (
                     var BlockIndex = 0;
                     BlockIndex < BlockCount;
@@ -499,24 +498,47 @@ if (MoveY != 0)
                 )
                 {
                     var Block = HitBlocks[| BlockIndex];
-        
+            
                     if (!instance_exists(Block))
                     {
                         continue;
                     }
-        
+            
                     //No activar bloques que no estén sobre la cabeza
                     if (bbox_top >= Block.bbox_bottom)
                     {
-                        Block.ReceiveBlockHit(
+                        var Accepted = Block.ReceiveBlockHit(
                             id,
                             BLOCK_HIT.BELOW,
                             -1
                         );
+            
+                        if (Accepted)
+                        {
+                            BlockAcceptedHit = true;
+                        }
                     }
                 }
-        
+            
                 ds_list_destroy(HitBlocks);
+            
+                //Elegir el volumen después de resolver las interacciones
+                var BumpGain = HeadBumpGain;
+            
+                if (BlockAcceptedHit)
+                {
+                    BumpGain = HeadBumpBlockGain;
+                }
+            
+                if (BumpGain > 0)
+                {
+                    audio_play_sound(
+                        sndHeadBump,
+                        1,
+                        false,
+                        BumpGain
+                    );
+                }
             }
         
             VSpeed = 0;
