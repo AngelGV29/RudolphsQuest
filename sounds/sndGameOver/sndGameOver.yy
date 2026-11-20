@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"sndGameOver",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":1.3666667,
+  "exportDir":"",
+  "name":"sndGameOver",
+  "parent":{
+    "name":"Juego terminado",
+    "path":"folders/Audio/Juego terminado.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"sndGameOver.mp3",
+  "volume":1.0,
+}

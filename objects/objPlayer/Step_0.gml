@@ -3,28 +3,28 @@
 //1. Comprobar entradas
 
 //Caminar
-var LeftHeld = keyboard_check(vk_left);
-var RightHeld = keyboard_check(vk_right);
+var LeftHeld = keyboard_check(ord("A"));
+var RightHeld = keyboard_check(ord("D"));
 
 //Correr
-var RunHeld = keyboard_check(vk_control);
+var RunHeld = keyboard_check(vk_shift);
 
 //Saltar
-var JumpHeld = keyboard_check(ord("Z"));
-var JumpPressed = keyboard_check_pressed(ord("Z"));
-var JumpReleased = keyboard_check_released(ord("Z"));
+var JumpHeld = keyboard_check(vk_space);
+var JumpPressed = keyboard_check_pressed(vk_space);
+var JumpReleased = keyboard_check_released(vk_space);
 
 //Ataque con el martillo
-var HammerPressed = keyboard_check_pressed(ord("X"));
+var HammerPressed = keyboard_check_pressed(ord("J")) || mouse_check_button_pressed(mb_left);
 
 //Recoger un enemigo
-var PickupPressed = keyboard_check_pressed(ord("C"));
+var PickupPressed = keyboard_check_pressed(ord("K")) || mouse_check_button_pressed(mb_right);
 //Elegir el lanzamiento parabólico
-var ThrowUpHeld = keyboard_check(vk_up);
+var ThrowUpHeld = keyboard_check(ord("W"));
 
 //Cálculos de dirección
 var MoveInput = RightHeld - LeftHeld;
-var InputMaxSpeed;
+var InputMaxSpeed = 0;
 
 //TEMPORAL PARA PRUEBAS:
 if (keyboard_check_pressed(ord("R"))){
@@ -40,19 +40,19 @@ if (InvulnerabilityTimer > 0)
 //Actualizar la recuperación del lanzamiento
 if (ActionState == PLAYER_ACTION_STATE.THROWING)
 {
-    ThrowVisualTimer = max(
-        ThrowVisualTimer - 1,
+    ThrowRecoveryTimer = max(
+        ThrowRecoveryTimer - 1,
         0
     );
 
-    if (ThrowVisualTimer == 0)
+    if (ThrowRecoveryTimer == 0)
     {
         ActionState = PLAYER_ACTION_STATE.NORMAL;
     }
 }
 else
 {
-    ThrowVisualTimer = 0;
+    ThrowRecoveryTimer = 0;
 }
 
 //Actualizar estado de daño
@@ -72,12 +72,65 @@ if (ActionState == PLAYER_ACTION_STATE.HURT)
 //Actualizar muerte
 if (ActionState == PLAYER_ACTION_STATE.DEAD)
 {
-    DeathTimer -= 1;
-
-    if (DeathTimer <= 0)
+    if (DeathTimer > 0)
     {
-        room_restart();
-        exit;
+        DeathTimer -= 1;
+    }
+
+    if (
+        DeathTimer <= 0
+        && DeathAnimationFinished
+    )
+    {
+        if (!GameOverStarted)
+        {
+            //Reproducir el sonido una sola vez
+            GameOverStarted = true;
+
+            GameOverSound = audio_play_sound(
+                sndGameOver,
+                10,
+                false
+            );
+        }
+        else
+        {
+            //Reiniciar cuando termine esta reproducción
+            var RestartReady = GameOverSound == -1;
+
+            if (!RestartReady)
+            {
+                RestartReady = !audio_is_playing(
+                    GameOverSound
+                );
+            }
+
+            if (RestartReady)
+            {
+                if (!DeathResolved)
+                {
+                    DeathResolved = true;
+            
+                    var Game = instance_find(objGame, 0);
+            
+                    if (instance_exists(Game))
+                    {
+                        Game.CompletePlayerDeath();
+                    }
+                    else
+                    {
+                        show_debug_message(
+                            "No existe objGame al resolver la muerte."
+                        );
+            
+                        //Respaldo para habitaciones de prueba sin controlador
+                        room_restart();
+                    }
+                }
+            
+                exit;
+            }
+        }
     }
 }
 
@@ -134,7 +187,7 @@ else
 
 var WasOnGround = OnGround;
 
-OnGround = place_meeting(x, y + 1, objSolid);
+OnGround = CheckGround();
 
 //Guardar límite al salir de una plataforma
 if (WasOnGround && !OnGround)
@@ -257,11 +310,19 @@ if (
 {
     if (instance_exists(CarriedEnemy))
     {
+        audio_play_sound(sndThrowEnemy, 1, false);
         TryThrowEnemy(ThrowUpHeld);
     }
     else
     {
-        TryPickupEnemy();
+        // Guardamos si realmente logró recoger a un enemigo
+        var DidPickup = TryPickupEnemy();
+
+        // Solo si la función devolvió true (es decir, sí agarró a alguien), suena el audio
+        if (DidPickup)
+        {
+		    audio_play_sound(sndPickUpTheEnemy, 1, false);
+        }
     }
 }
 
@@ -271,6 +332,7 @@ if (
 //Iniciar salto
 if (JumpBufferTimer > 0 && CoyoteTimer > 0)
 {
+    audio_play_sound(sndJumpPlayer, 1, false);
     if (OnGround)
     {
         AirMaxSpeed = max(
@@ -285,6 +347,7 @@ if (JumpBufferTimer > 0 && CoyoteTimer > 0)
             abs(HSpeed)
         );
     }
+    
 
     VSpeed = -JumpSpeed;
     VSubPixel = 0;
@@ -298,6 +361,8 @@ if (JumpBufferTimer > 0 && CoyoteTimer > 0)
     {
         VSpeed *= JumpCutMultiplier;
     }
+	
+	
 }
 
 
@@ -331,7 +396,7 @@ if (HSpeed != 0)
 {
     var CheckDir = sign(HSpeed);
 
-    if (place_meeting(x + CheckDir, y, objSolid))
+    if (CheckSolid(x + CheckDir, y))
     {
         HSpeed = 0;
         HSubPixel = 0;
@@ -355,7 +420,8 @@ if (MoveX != 0)
 
     repeat (abs(MoveX))
     {
-        if (!place_meeting(x + StepX, y, objSolid))
+        //Avanzar horizontalmente si no existe un obstáculo
+        if (!CheckSolid(x + StepX, y))
         {
             x += StepX;
         }
@@ -389,12 +455,95 @@ if (MoveY != 0)
 
     repeat (abs(MoveY))
     {
-        if (!place_meeting(x, y + StepY, objSolid))
+        var VerticalBlocked = CheckSolid(
+            x,
+            y + StepY
+        );
+
+        //Los semisólidos solo bloquean al descender
+        if (!VerticalBlocked && StepY > 0)
+        {
+            VerticalBlocked = CheckSemi(
+                x,
+                y + StepY
+            );
+        }
+
+        if (!VerticalBlocked)
         {
             y += StepY;
         }
         else
         {
+            //Activar bloques al golpearlos durante el ascenso
+            if (StepY < 0)
+            {
+                var BlockAcceptedHit = false;
+            
+                var HitBlocks = ds_list_create();
+            
+                var BlockCount = collision_rectangle_list(
+                    bbox_left,
+                    bbox_top - 1,
+                    bbox_right,
+                    bbox_top,
+                    objBlock,
+                    false,
+                    true,
+                    HitBlocks,
+                    false
+                );
+            
+                for (
+                    var BlockIndex = 0;
+                    BlockIndex < BlockCount;
+                    BlockIndex += 1
+                )
+                {
+                    var Block = HitBlocks[| BlockIndex];
+            
+                    if (!instance_exists(Block))
+                    {
+                        continue;
+                    }
+            
+                    //No activar bloques que no estén sobre la cabeza
+                    if (bbox_top >= Block.bbox_bottom)
+                    {
+                        var Accepted = Block.ReceiveBlockHit(
+                            id,
+                            BLOCK_HIT.BELOW,
+                            -1
+                        );
+            
+                        if (Accepted)
+                        {
+                            BlockAcceptedHit = true;
+                        }
+                    }
+                }
+            
+                ds_list_destroy(HitBlocks);
+            
+                //Elegir el volumen después de resolver las interacciones
+                var BumpGain = HeadBumpGain;
+            
+                if (BlockAcceptedHit)
+                {
+                    BumpGain = HeadBumpBlockGain;
+                }
+            
+                if (BumpGain > 0)
+                {
+                    audio_play_sound(
+                        sndHeadBump,
+                        1,
+                        false,
+                        BumpGain
+                    );
+                }
+            }
+        
             VSpeed = 0;
             VSubPixel = 0;
             break;
@@ -405,7 +554,23 @@ if (MoveY != 0)
 
 //13. Actualizar contacto con el suelo
 
-OnGround = place_meeting(x, y + 1, objSolid);
+OnGround = CheckGround();
+//Recoger ítems después de resolver el movimiento
+CollectPickups(id, false);
+
+//La muerte utiliza un sprite completo y no la locomoción por mitades
+if (ActionState == PLAYER_ACTION_STATE.DEAD)
+{
+    Facing = DeathFacing;
+    image_xscale = DeathFacing;
+
+    image_alpha = 1;
+
+    UpperOverrideSprite = -1;
+    UpperOverrideFrame = 0;
+
+    exit;
+}
 
 
 //14. Determinar estado de animación
@@ -518,27 +683,6 @@ image_xscale = Facing;
 //Usar el torso de locomoción salvo que una acción lo reemplace
 UpperOverrideSprite = -1;
 UpperOverrideFrame = 0;
-
-//Mostrar el gesto del lanzamiento
-if (
-    ActionState == PLAYER_ACTION_STATE.THROWING
-    && ThrowVisualTimer > 0
-)
-{
-    var ThrowFrameCount =
-        sprite_get_number(ThrowUpperSprite);
-
-    var ThrowProgress =
-        (ThrowVisualFrames - ThrowVisualTimer)
-        / ThrowVisualFrames;
-
-    UpperOverrideSprite = ThrowUpperSprite;
-
-    UpperOverrideFrame = min(
-        floor(ThrowProgress * ThrowFrameCount),
-        ThrowFrameCount - 1
-    );
-}
 
 //Mostrar el torso de carga
 if (instance_exists(CarriedEnemy))

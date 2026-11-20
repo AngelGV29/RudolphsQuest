@@ -36,4 +36,18 @@ function scrStates(){
         HORIZONTAL,
         ARC
     }
+    
+    enum BLOCK_STATE
+    {
+        READY,
+        ACTIVE,
+        EMPTY
+    }
+    
+    enum BLOCK_HIT
+    {
+        BELOW,
+        HAMMER,
+        THROWN
+    }
 }

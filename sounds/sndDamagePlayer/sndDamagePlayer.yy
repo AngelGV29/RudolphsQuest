@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"sndDamagePlayer",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":1.4720862,
+  "exportDir":"",
+  "name":"sndDamagePlayer",
+  "parent":{
+    "name":"Daño",
+    "path":"folders/Entidades/Vivos/Rudolph/Sonidos/Daño.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"sndDamagePlayer.mp3",
+  "volume":1.0,
+}
