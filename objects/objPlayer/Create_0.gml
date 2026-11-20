@@ -69,6 +69,12 @@ DeathResolved = false;
 //Control del sonido previo al reinicio
 GameOverStarted = false;
 GameOverSound = -1;
+//Animación completa de muerte
+DeathSprite = sprPlayerDeadComplete;
+DeathAnimationFinished = false;
+//Orientación fijada al recibir el golpe letal
+DeathFacing = Facing;
+
 
 //Duración de las fases del martillazo
 HammerStartupFrames = 6;
@@ -215,11 +221,33 @@ TakeDamage = function(DamageAmount, SourceX)
         ActionState = PLAYER_ACTION_STATE.DEAD;
     
         DeathTimer = DeathFrames;
-    
         DeathResolved = false;
-        
+    
         GameOverStarted = false;
         GameOverSound = -1;
+    
+        //Orientar la pose para caer hacia atrás respecto al golpe
+        DeathFacing = -KnockbackDirection;
+    
+        Facing = DeathFacing;
+        image_xscale = DeathFacing;
+    
+        //Cancelar cualquier presentación de ataque anterior
+        HammerActive = false;
+        HammerTimer = 0;
+    
+        UpperOverrideSprite = -1;
+        UpperOverrideFrame = 0;
+    
+        InvulnerabilityTimer = 0;
+        image_alpha = 1;
+    
+        //Iniciar la animación una sola vez al morir
+        sprite_index = DeathSprite;
+        image_index = 0;
+        image_speed = 1;
+    
+        DeathAnimationFinished = false;
     }
     else
     {

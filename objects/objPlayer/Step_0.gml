@@ -77,7 +77,10 @@ if (ActionState == PLAYER_ACTION_STATE.DEAD)
         DeathTimer -= 1;
     }
 
-    if (DeathTimer <= 0)
+    if (
+        DeathTimer <= 0
+        && DeathAnimationFinished
+    )
     {
         if (!GameOverStarted)
         {
@@ -554,6 +557,20 @@ if (MoveY != 0)
 OnGround = CheckGround();
 //Recoger ítems después de resolver el movimiento
 CollectPickups(id, false);
+
+//La muerte utiliza un sprite completo y no la locomoción por mitades
+if (ActionState == PLAYER_ACTION_STATE.DEAD)
+{
+    Facing = DeathFacing;
+    image_xscale = DeathFacing;
+
+    image_alpha = 1;
+
+    UpperOverrideSprite = -1;
+    UpperOverrideFrame = 0;
+
+    exit;
+}
 
 
 //14. Determinar estado de animación

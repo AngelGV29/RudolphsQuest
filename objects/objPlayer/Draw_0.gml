@@ -1,5 +1,12 @@
 /// @description Dibuja al jugador y la hitbox de prueba
 
+//La muerte reemplaza toda la composición del jugador
+if (ActionState == PLAYER_ACTION_STATE.DEAD)
+{
+    draw_self();
+    exit;
+}
+
 //Dibujar la parte inferior
 draw_sprite_ext(
     sprite_index,
