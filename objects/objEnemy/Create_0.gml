@@ -220,6 +220,8 @@ ChangeState = function(NewState)
     var PreviousVSpeed = VSpeed;
     var PreviousHSubPixel = HSubPixel;
     var PreviousVSubPixel = VSubPixel;
+    //Registrar el vínculo antes de que DetachCarrier lo elimine
+    var WasCarried = Carrier != noone;
 
     EnemyState = NewState;
     StateTimer = 0;
@@ -250,6 +252,37 @@ ChangeState = function(NewState)
         ThrowOwner = noone;
     }
     
+    //Corregir solapamientos después de aplicar máscara y orientación
+    var ReleasedFromCarrier =
+        WasCarried
+        && Carrier == noone;
+    
+    var RestoredNormalMask =
+        NewState == ENEMY_STATE.NORMAL;
+    
+    if (
+        (ReleasedFromCarrier || RestoredNormalMask)
+        && NewState != ENEMY_STATE.THROWN
+    )
+    {
+        var Positioned = ResolveSolidOverlap(id, 32);
+    
+        //Ampliar la búsqueda solo si no había espacio cercano
+        if (!Positioned)
+        {
+            Positioned = ResolveSolidOverlap(id, 64);
+        }
+    
+        if (Positioned)
+        {
+            //Descartar fracciones calculadas para la posición anterior
+            HSubPixel = 0;
+            VSubPixel = 0;
+    
+            OnGround = CheckGround();
+        }
+    }
+    
     //Mirar al jugador al terminar de despertar
     if (
        PreviousState == ENEMY_STATE.WAKING
@@ -268,7 +301,7 @@ ChangeState = function(NewState)
            }
            else
            {
-               Facing = -Player.Facing;
+               Facing = Player.Facing;
            }
        }
    

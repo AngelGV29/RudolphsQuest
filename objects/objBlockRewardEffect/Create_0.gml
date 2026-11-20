@@ -5,4 +5,4 @@ EffectTimer = 0;
 
 RiseSpeed = 0.75;
 
-image_speed = 0;
+image_speed = 1;
