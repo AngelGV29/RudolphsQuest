@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"sndCollectGoldenHeart",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":1.5136281,
+  "exportDir":"",
+  "name":"sndCollectGoldenHeart",
+  "parent":{
+    "name":"Recoger corazon dorado",
+    "path":"folders/Audio/Recoger corazon dorado.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"sndCollectGoldenHeart.mp3",
+  "volume":1.0,
+}

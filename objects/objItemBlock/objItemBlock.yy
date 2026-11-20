@@ -1,0 +1,55 @@
+{
+  "$GMObject":"",
+  "%Name":"objItemBlock",
+  "eventList":[
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+  ],
+  "managed":true,
+  "name":"objItemBlock",
+  "overriddenProperties":[],
+  "parent":{
+    "name":"Bloque interactuable",
+    "path":"folders/Entidades/No vivos/Bloques/Bloque interactuable.yy",
+  },
+  "parentObjectId":{
+    "name":"objBlock",
+    "path":"objects/objBlock/objBlock.yy",
+  },
+  "persistent":false,
+  "physicsAngularDamping":0.1,
+  "physicsDensity":0.5,
+  "physicsFriction":0.2,
+  "physicsGroup":1,
+  "physicsKinematic":false,
+  "physicsLinearDamping":0.1,
+  "physicsObject":false,
+  "physicsRestitution":0.1,
+  "physicsSensor":false,
+  "physicsShape":1,
+  "physicsShapePoints":[],
+  "physicsStartAwake":true,
+  "properties":[
+    {"$GMObjectProperty":"v2","%Name":"ContentObject","filters":[
+        "GMObject",
+      ],"listItems":[],"multiselect":false,"name":"ContentObject","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resource":{"name":"objCoin","path":"objects/objCoin/objCoin.yy",},"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"objCoin","varType":5,},
+    {"$GMObjectProperty":"v2","%Name":"ActivationSound","filters":[
+        "GMSound",
+      ],"listItems":[],"multiselect":false,"name":"ActivationSound","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"noone","varType":5,},
+    {"$GMObjectProperty":"v2","%Name":"ContentCount","filters":[],"listItems":[],"multiselect":false,"name":"ContentCount","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"1","varType":1,},
+    {"$GMObjectProperty":"v2","%Name":"ReleaseFrame","filters":[],"listItems":[],"multiselect":false,"name":"ReleaseFrame","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"1","varType":1,},
+    {"$GMObjectProperty":"v2","%Name":"ActiveFrames","filters":[],"listItems":[],"multiselect":false,"name":"ActiveFrames","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"16","varType":1,},
+  ],
+  "resourceType":"GMObject",
+  "resourceVersion":"2.0",
+  "solid":false,
+  "spriteId":{
+    "name":"sprItemBlockIdle",
+    "path":"sprites/sprItemBlockIdle/sprItemBlockIdle.yy",
+  },
+  "spriteMaskId":{
+    "name":"sprBlockMask",
+    "path":"sprites/sprBlockMask/sprBlockMask.yy",
+  },
+  "visible":true,
+}

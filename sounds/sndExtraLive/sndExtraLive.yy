@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"sndExtraLive",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":1.2926757,
+  "exportDir":"",
+  "name":"sndExtraLive",
+  "parent":{
+    "name":"Obtener una vida extra",
+    "path":"folders/Audio/Obtener una vida extra.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"sndExtraLive.mp3",
+  "volume":1.0,
+}

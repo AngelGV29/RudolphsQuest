@@ -12,5 +12,6 @@ if (instance_exists(Carrier))
         + Carrier.CarryOffsetY
     );
 
-    image_xscale = 1;
+    Facing = Carrier.Facing;
+    image_xscale = Facing;
 }

@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"sndCollectACoin",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":0.5579592,
+  "exportDir":"",
+  "name":"sndCollectACoin",
+  "parent":{
+    "name":"Sonidos",
+    "path":"folders/Entidades/No vivos/Recogibles/Moneda/Sonidos.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"sndCollectACoin.mp3",
+  "volume":0.3,
+}

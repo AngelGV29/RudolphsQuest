@@ -7,15 +7,21 @@ event_inherited();
 CanBeFlattened = true;
 CanBeCarried = true;
 CanBeHitByThrown = true;
+DropsDiamond = true;
 
 //Recursos de cada estado
 StateSpriteNormal = sprWildGoblinPlaceholder;
 StateMaskNormal = sprWildGoblinMask;
+StateAnimSpeedNormal = 1;
 
 StateSpriteFlattened = sprWildGoblinFlattenedPlaceholder;
 StateMaskFlattened = sprWildGoblinFlattenedMask;
 
 StateSpriteWaking = sprWildGoblinWakingPlaceholder;
+
+//Efecto visual de derrota
+DefeatSprite = sprWildGoblinDefeated;
+DefeatFrames = 18;
 
 //Propiedades del duende
 ContactDamage = 1;
@@ -56,3 +62,6 @@ OnPlayerDamaged = function(Player, PlayerSide)
         image_xscale = Facing;
     }
 };
+
+//Aplicar también las propiedades del estado inicial
+OnStateEnter(EnemyState);

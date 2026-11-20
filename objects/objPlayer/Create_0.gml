@@ -1,13 +1,13 @@
 /// @description Inicializa el movimiento básico del jugador
 //Límites de velocidad horizontal
 MaxWalkSpeed = 1.75;
-MaxRunSpeed = 3.50;
+MaxRunSpeed = 3.5;
 
 //Límite horizontal conservado durante el salto
 AirMaxSpeed = MaxWalkSpeed;
 
 //Aceleración, frenado y giro en el suelo
-GroundAccel = 0.05;
+GroundAccel = 0.05
 GroundDecel = 0.2;
 GroundTurnAccel = 0.2;
 
@@ -64,11 +64,22 @@ KnockbackVSpeed = 1.5;
 //Muerte
 DeathFrames = 45;
 DeathTimer = 0;
+//Evitar resolver una misma muerte más de una vez
+DeathResolved = false;
+//Control del sonido previo al reinicio
+GameOverStarted = false;
+GameOverSound = -1;
+//Animación completa de muerte
+DeathSprite = sprPlayerDeadComplete;
+DeathAnimationFinished = false;
+//Orientación fijada al recibir el golpe letal
+DeathFacing = Facing;
+
 
 //Duración de las fases del martillazo
-HammerStartupFrames = 4;
-HammerActiveFrames = 5;
-HammerRecoveryFrames = 7;
+HammerStartupFrames = 6;
+HammerActiveFrames = 3;
+HammerRecoveryFrames = 12;
 
 //Control del martillazo actual
 HammerTimer = 0;
@@ -76,7 +87,7 @@ HammerAttackId = 0;
 HammerActive = false;
 
 //Dimensiones de la hitbox
-HammerRange = 14;
+HammerRange = 24;
 
 //Coordenadas actuales de la hitbox
 HammerHitLeft = 0;
@@ -88,7 +99,6 @@ HammerHitBottom = 0;
 HammerHitList = ds_list_create();
 //Mostrar la hitbox del martillo durante las pruebas
 ShowHammerHitbox = true;
-
 
 //Sprite y fotograma independientes del torso atacante
 HammerUpperSprite = sprPlayerHammerUpper;
@@ -103,18 +113,22 @@ PickupHeight = 8; //Diferencia vertical permitida entre los pies
 ShowPickupArea = true; //Mostrar el alcance de recogida durante las pruebas
 
 //Posición visual del enemigo respecto a Rudolph
-CarryOffsetX = 10;
-CarryOffsetY = -10;
+CarryOffsetX = 9;
+CarryOffsetY = -8;
 
 //Lanzamiento del enemigo
 ThrowSpeed = 3; //Velocidad base horizontal del lanzamiento
 ThrowMoveFactor = 1; //Proporción de movimiento horizontal transferida
 ThrowArcSpeed = 6.5; //Impulso vertical del lanzamiento parabólico
 
-//Animación visual del lanzamiento
-ThrowUpperSprite = sprPlayerThrowUpper;
-ThrowVisualFrames = 20;
-ThrowVisualTimer = 0;
+//Recuperación después de lanzar un enemigo
+ThrowRecoveryFrames = 15;
+ThrowRecoveryTimer = 0;
+
+//Volumen del golpe de cabeza contra sólidos comunes
+HeadBumpGain = 1;
+//Volumen cuando un bloque acepta el golpe y responde por su cuenta (el cero lo silencia)
+HeadBumpBlockGain = 0;
 
 //Parte superior correspondiente a la locomoción
 MoveUpperSprite = sprPlayerIdleUpper; //Sprite superior que corresponde a la locomoción actual
@@ -167,8 +181,8 @@ TakeDamage = function(DamageAmount, SourceX)
 
     //Soltar solo si el daño fue aceptado
     DropCarriedEnemy();
-    //Cancelar el gesto de lanzamiento al recibir daño
-    ThrowVisualTimer = 0;
+    //Cancelar la recuperación del lanzamiento al recibir daño
+    ThrowRecoveryTimer = 0;
     
     Hp = max(
         Hp - DamageAmount,
@@ -204,10 +218,36 @@ TakeDamage = function(DamageAmount, SourceX)
 
     if (Hp <= 0)
     {
-        ActionState =
-            PLAYER_ACTION_STATE.DEAD;
-
+        ActionState = PLAYER_ACTION_STATE.DEAD;
+    
         DeathTimer = DeathFrames;
+        DeathResolved = false;
+    
+        GameOverStarted = false;
+        GameOverSound = -1;
+    
+        //Orientar la pose para caer hacia atrás respecto al golpe
+        DeathFacing = -KnockbackDirection;
+    
+        Facing = DeathFacing;
+        image_xscale = DeathFacing;
+    
+        //Cancelar cualquier presentación de ataque anterior
+        HammerActive = false;
+        HammerTimer = 0;
+    
+        UpperOverrideSprite = -1;
+        UpperOverrideFrame = 0;
+    
+        InvulnerabilityTimer = 0;
+        image_alpha = 1;
+    
+        //Iniciar la animación una sola vez al morir
+        sprite_index = DeathSprite;
+        image_index = 0;
+        image_speed = 1;
+    
+        DeathAnimationFinished = false;
     }
     else
     {
@@ -223,6 +263,25 @@ TakeDamage = function(DamageAmount, SourceX)
     return true;
 };
 
+//Recuperar salud y devolver la cantidad realmente recuperada
+RecoverHp = function(Amount)
+{
+    if (ActionState == PLAYER_ACTION_STATE.DEAD)
+    {
+        return 0;
+    }
+
+    var Recovery = max(0, floor(Amount));
+    var PreviousHp = Hp;
+
+    Hp = min(
+        Hp + Recovery,
+        MaxHp
+    );
+
+    return Hp - PreviousHp;
+};
+
 //Inicia un nuevo martillazo
 StartHammerAttack = function()
 {
@@ -236,6 +295,8 @@ StartHammerAttack = function()
     {
         return false;
     }
+    
+    audio_play_sound(sndAttackPlayer, 1, false);
 
     //Guardar la dirección del ataque
     HammerFacing = Facing;
@@ -266,6 +327,7 @@ UpdateHammerHitbox = function()
         HammerHitLeft = bbox_left - HammerRange;
         HammerHitRight = bbox_left + 2;
     }
+    
 };
 
 //Golpea todos los enemigos dentro de la hitbox
@@ -294,6 +356,39 @@ PerformHammerHit = function()
             Enemy.ReceiveHammerHit(
                 HammerAttackId,
                 id
+            );
+        }
+    }
+    
+    //Buscar también bloques alcanzados por el martillo
+    ds_list_clear(HammerHitList);
+    
+    var BlockCount = collision_rectangle_list(
+        HammerHitLeft,
+        HammerHitTop,
+        HammerHitRight,
+        HammerHitBottom,
+        objBlock,
+        false,
+        true,
+        HammerHitList,
+        false
+    );
+    
+    for (
+        var BlockIndex = 0;
+        BlockIndex < BlockCount;
+        BlockIndex += 1
+    )
+    {
+        var Block = HammerHitList[| BlockIndex];
+    
+        if (instance_exists(Block))
+        {
+            Block.ReceiveBlockHit(
+                id,
+                BLOCK_HIT.HAMMER,
+                HammerAttackId
             );
         }
     }
@@ -524,7 +619,7 @@ TryThrowEnemy = function(UseArc)
     ThrowFacing = Facing;
     
     //Iniciar la recuperación del lanzamiento
-    ThrowVisualTimer = ThrowVisualFrames;
+    ThrowRecoveryTimer = ThrowRecoveryFrames;
     ActionState = PLAYER_ACTION_STATE.THROWING;
     
     return true;

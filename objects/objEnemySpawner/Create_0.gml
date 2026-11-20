@@ -43,7 +43,7 @@ SpawnEnemy = function(Player)
     var NewEnemy = instance_create_layer(
         SpawnX,
         SpawnY,
-        layer,
+        "Entities",
         EnemyObject
     );
 
