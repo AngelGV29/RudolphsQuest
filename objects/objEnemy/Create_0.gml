@@ -30,6 +30,8 @@ LastHammerAttackId = -1; //Evitará que un enemigo pueda se alcanzado más de un
 //Sprites y máscaras de cada estado
 StateSpriteNormal = sprite_index;
 StateMaskNormal = mask_index;
+//Velocidad de reproducción al entrar al estado normal
+StateAnimSpeedNormal = 0;
 
 StateSpriteFlattened = -1;
 StateMaskFlattened = -1;
@@ -86,7 +88,7 @@ OnStateEnter = function(NewState)
             }
 
             image_index = 0;
-            image_speed = 0;
+            image_speed = StateAnimSpeedNormal;
             break;
 
         case ENEMY_STATE.FLATTENED:
@@ -168,7 +170,15 @@ OnStateEnter = function(NewState)
             image_index = 0;
             image_speed = 0;
             break;
-            }
+    }
+    
+    //Aplicar inmediatamente la orientación del nuevo estado
+    if (instance_exists(Carrier))
+    {
+        Facing = Carrier.Facing;
+    }
+    
+    image_xscale = Facing;
 };
 
 //Desvincular al portador y colocar al enemigo junto a sus pies

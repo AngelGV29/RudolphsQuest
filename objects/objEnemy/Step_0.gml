@@ -25,7 +25,7 @@ if (EnemyState == ENEMY_STATE.THROWN)
 
     if (!RemovedFromLevel)
     {
-        image_xscale = 1;
+        image_xscale = Facing;
     }
 
     exit;
@@ -65,7 +65,9 @@ if (instance_exists(Carrier))
     VSubPixel = 0;
 
     OnGround = false;
-    image_xscale = 1;
+
+    Facing = Carrier.Facing;
+    image_xscale = Facing;
 
     exit;
 }
@@ -210,16 +212,5 @@ if (
     }
 }
 
-//Orientar el sprite según su estado
-if (
-    EnemyState == ENEMY_STATE.FLATTENED
-    || EnemyState == ENEMY_STATE.WAKING
-    || EnemyState == ENEMY_STATE.CARRIED
-)
-{
-    image_xscale = 1;
-}
-else
-{
-    image_xscale = Facing;
-}
+//Orientar el sprite en todos los estados
+image_xscale = Facing;

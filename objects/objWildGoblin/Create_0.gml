@@ -12,6 +12,7 @@ DropsDiamond = true;
 //Recursos de cada estado
 StateSpriteNormal = sprWildGoblinPlaceholder;
 StateMaskNormal = sprWildGoblinMask;
+StateAnimSpeedNormal = 1;
 
 StateSpriteFlattened = sprWildGoblinFlattenedPlaceholder;
 StateMaskFlattened = sprWildGoblinFlattenedMask;
@@ -61,3 +62,6 @@ OnPlayerDamaged = function(Player, PlayerSide)
         image_xscale = Facing;
     }
 };
+
+//Aplicar también las propiedades del estado inicial
+OnStateEnter(EnemyState);
