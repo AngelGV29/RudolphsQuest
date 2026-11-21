@@ -30,6 +30,13 @@ function scrStates(){
         WAKING,
         DEFEATED
     }
+    
+    enum DRAGON_FIRE_PHASE
+    {
+        WAIT,
+        PREPARE,
+        SPIT
+    }
 
     enum THROW_MODE
     {
