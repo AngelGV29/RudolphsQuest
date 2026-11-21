@@ -85,7 +85,7 @@ ReleaseContent = function()
     var Drop = instance_create_layer(
         (bbox_left + bbox_right) * 0.5,
         bbox_top,
-        layer,
+        "Pickups",
         ContentObject
     );
 
@@ -120,7 +120,7 @@ ReleaseContent = function()
             var Effect = instance_create_layer(
                 RewardX,
                 RewardY,
-                layer,
+                "Effects",
                 objBlockRewardEffect
             );
 

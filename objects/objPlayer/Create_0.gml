@@ -87,7 +87,9 @@ HammerAttackId = 0;
 HammerActive = false;
 
 //Dimensiones de la hitbox
-HammerRange = 24;
+HammerRange = 24; //Longitud
+HammerHeight = 20; //Altura
+HammerOffsetY = 0; //Posición del borde inferior respecto a los pies
 
 //Coordenadas actuales de la hitbox
 HammerHitLeft = 0;
@@ -97,8 +99,6 @@ HammerHitBottom = 0;
 
 //Lista temporal de enemigos alcanzados
 HammerHitList = ds_list_create();
-//Mostrar la hitbox del martillo durante las pruebas
-ShowHammerHitbox = true;
 
 //Sprite y fotograma independientes del torso atacante
 HammerUpperSprite = sprPlayerHammerUpper;
@@ -110,10 +110,9 @@ CarriedEnemy = noone;
 //Recogida del enemigo
 PickupRange = 10;//Alcance para recoger desde los lados
 PickupHeight = 8; //Diferencia vertical permitida entre los pies
-ShowPickupArea = true; //Mostrar el alcance de recogida durante las pruebas
 
 //Posición visual del enemigo respecto a Rudolph
-CarryOffsetX = 9;
+CarryOffsetX = 6;
 CarryOffsetY = -8;
 
 //Lanzamiento del enemigo
@@ -314,8 +313,11 @@ StartHammerAttack = function()
 //Calcula la zona de impacto del martillo
 UpdateHammerHitbox = function()
 {
-    HammerHitTop = bbox_top + 2;
-    HammerHitBottom = bbox_bottom + 2;
+    HammerHitBottom = bbox_bottom + HammerOffsetY;
+
+    HammerHitTop =
+        HammerHitBottom
+        - max(1, HammerHeight);
 
     if (HammerFacing > 0)
     {
@@ -327,7 +329,6 @@ UpdateHammerHitbox = function()
         HammerHitLeft = bbox_left - HammerRange;
         HammerHitRight = bbox_left + 2;
     }
-    
 };
 
 //Golpea todos los enemigos dentro de la hitbox

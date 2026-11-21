@@ -25,6 +25,8 @@ var TriggerFrame = clamp(
 if (!EffectReleased && Frame >= TriggerFrame)
 {
     EffectReleased = true;
+    
+    BumpPickups();
 
     ReleaseContent();
     BumpEnemies();

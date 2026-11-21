@@ -5,7 +5,8 @@ mask_index = sprBlockMask;
 LastHammerOwner = noone;
 LastHammerAttackId = -1;
 
-BumpSpeed = 2;
+BumpSpeed = 2; //Impulso para enemigos encima
+PickupBumpSpeed = 2; //Impulso para recogibles con físicas encima
 
 //Cada hijo define qué ocurre al aceptar un golpe
 ActivateBlock = function(Attacker, HitType)
@@ -99,6 +100,54 @@ BumpEnemies = function()
         if (OverlapX && RestingAbove)
         {
             Enemy.ReceiveBlockBump(BumpSpeed);
+        }
+    }
+};
+
+//Impulsar únicamente recogibles con física
+BumpPickups = function()
+{
+    var Pickups = [];
+
+    with (objPickupPhysical)
+    {
+        array_push(Pickups, id);
+    }
+
+    for (
+        var Index = 0;
+        Index < array_length(Pickups);
+        Index += 1
+    )
+    {
+        var Pickup = Pickups[Index];
+
+        if (!instance_exists(Pickup))
+        {
+            continue;
+        }
+
+        if (Pickup.Collected)
+        {
+            continue;
+        }
+
+        var OverlapX =
+            Pickup.bbox_right >= bbox_left
+            && Pickup.bbox_left <= bbox_right;
+
+        var FeetGap = bbox_top - Pickup.bbox_bottom;
+
+        var RestingAbove =
+            FeetGap >= -1
+            && FeetGap <= 2
+            && Pickup.VSpeed >= 0;
+
+        if (OverlapX && RestingAbove)
+        {
+            Pickup.ReceiveBlockBump(
+                PickupBumpSpeed
+            );
         }
     }
 };

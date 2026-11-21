@@ -33,7 +33,7 @@ SpawnFragments = function()
         var Fragment = instance_create_layer(
             CenterX + 4 * DirX,
             CenterY + OffsetY,
-            layer,
+            "Effects",
             objBlockFragment
         );
 
@@ -55,6 +55,7 @@ ActivateBlock = function(Attacker, HitType)
     Breaking = true;
 
     BumpEnemies();
+    BumpPickups();
 
     SpawnFragments();
 

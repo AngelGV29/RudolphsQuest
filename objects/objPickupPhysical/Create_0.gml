@@ -24,3 +24,19 @@ LifeFrames = 0;
 
 BlinkFrames = 0;
 BlinkInterval = 6;
+
+//Recibir un impulso del bloque sin conceder la recompensa
+ReceiveBlockBump = function(Impulse)
+{
+    if (Collected)
+    {
+        return false;
+    }
+
+    VSpeed = -abs(Impulse);
+    VSubPixel = 0;
+
+    OnGround = false;
+
+    return true;
+};
