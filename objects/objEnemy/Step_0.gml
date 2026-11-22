@@ -13,7 +13,12 @@ if (Carrier != noone && !instance_exists(Carrier))
 }
 
 //Comprobar el suelo
-OnGround = CheckGround();
+OnGround = false;
+
+if (!IgnoresTerrain)
+{
+    OnGround = CheckGround();
+}
 
 //Actualizar temporizador
 StateTimer += 1;
@@ -53,6 +58,13 @@ switch (EnemyState)
     default:
         HSpeed = 0;
         break;
+}
+
+//No conservar un enemigo físico encerrado sin espacio disponible
+if (TerrainRecoveryFailed)
+{
+    RemoveFromLevel(false);
+    exit;
 }
 
 //El portador controla la posición del enemigo sujeto
@@ -101,7 +113,10 @@ if (MoveX != 0)
 
     repeat (abs(MoveX))
     {
-        if (!CheckSolid(x + StepX, y))
+        if (
+            IgnoresTerrain
+            || !CheckSolid(x + StepX, y)
+        )
         {
             x += StepX;
         }
@@ -132,18 +147,23 @@ if (MoveY != 0)
 
     repeat (abs(MoveY))
     {
-        var VerticalBlocked = CheckSolid(
-            x,
-            y + StepY
-        );
+        var VerticalBlocked = false;
 
-        //Los semisólidos solo bloquean al descender
-        if (!VerticalBlocked && StepY > 0)
+        if (!IgnoresTerrain)
         {
-            VerticalBlocked = CheckSemi(
+            VerticalBlocked = CheckSolid(
                 x,
                 y + StepY
             );
+        
+            //Los semisólidos solo bloquean al descender
+            if (!VerticalBlocked && StepY > 0)
+            {
+                VerticalBlocked = CheckSemi(
+                    x,
+                    y + StepY
+                );
+            }
         }
 
         if (!VerticalBlocked)
@@ -160,7 +180,12 @@ if (MoveY != 0)
 }
 
 //Actualizar condiciones
-OnGround = CheckGround();
+OnGround = false;
+
+if (!IgnoresTerrain)
+{
+    OnGround = CheckGround();
+}
 
 //Comprobar contacto dañino con el jugador
 if (

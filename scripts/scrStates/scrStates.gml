@@ -37,6 +37,13 @@ function scrStates(){
         PREPARE,
         SPIT
     }
+    
+    enum BAT_PHASE
+    {
+        WAIT,
+        DROP,
+        FLY
+    }
 
     enum THROW_MODE
     {
