@@ -19,6 +19,15 @@ VSpeed = 0;
 HSubPixel = 0;
 VSubPixel = 0;
 
+//Permitir movimiento sin colisiones con el terreno
+IgnoresTerrain = false;
+
+//Corregir también la posición al entrar al estado aplastado
+ResolveOnFlattened = false;
+
+//Retirada de seguridad si no existe espacio para recuperar colisiones
+TerrainRecoveryFailed = false;
+
 //Condiciones
 Facing = -1;
 OnGround = false;
@@ -252,7 +261,7 @@ ChangeState = function(NewState)
         ThrowOwner = noone;
     }
     
-    //Corregir solapamientos después de aplicar máscara y orientación
+    //Corregir la posición al recuperar un estado físico
     var ReleasedFromCarrier =
         WasCarried
         && Carrier == noone;
@@ -260,14 +269,22 @@ ChangeState = function(NewState)
     var RestoredNormalMask =
         NewState == ENEMY_STATE.NORMAL;
     
+    var EnteredFlattened =
+        ResolveOnFlattened
+        && NewState == ENEMY_STATE.FLATTENED;
+    
     if (
-        (ReleasedFromCarrier || RestoredNormalMask)
+        !IgnoresTerrain
         && NewState != ENEMY_STATE.THROWN
+        && (
+            ReleasedFromCarrier
+            || RestoredNormalMask
+            || EnteredFlattened
+        )
     )
     {
         var Positioned = ResolveSolidOverlap(id, 32);
     
-        //Ampliar la búsqueda solo si no había espacio cercano
         if (!Positioned)
         {
             Positioned = ResolveSolidOverlap(id, 64);
@@ -275,12 +292,17 @@ ChangeState = function(NewState)
     
         if (Positioned)
         {
-            //Descartar fracciones calculadas para la posición anterior
             HSubPixel = 0;
             VSubPixel = 0;
     
             OnGround = CheckGround();
         }
+    
+        //Solo los enemigos que solicitan esta protección
+        //se retiran si no existe ninguna posición utilizable
+        TerrainRecoveryFailed =
+            ResolveOnFlattened
+            && !Positioned;
     }
     
     //Mirar al jugador al terminar de despertar
@@ -340,6 +362,13 @@ RemoveFromLevel = function(PermanentlyDefeated)
     if (RemovedFromLevel)
     {
         return;
+    }
+    
+    //No conservar un enemigo físico encerrado sin espacio disponible
+    if (TerrainRecoveryFailed)
+    {
+        RemoveFromLevel(false);
+        exit;
     }
 
     RemovedFromLevel = true;
@@ -742,4 +771,10 @@ ReceiveBlockBump = function(Impulse)
     OnGround = false;
 
     return true;
+};
+
+//Aviso opcional de un bloque activado en la habitación
+ReceiveBlockAlert = function(Block)
+{
+    return false;
 };

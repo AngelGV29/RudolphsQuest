@@ -85,6 +85,9 @@ BumpEnemies = function()
         {
             continue;
         }
+        
+        //Permitir reacciones de proximidad, aunque no esté apoyado
+        Enemy.ReceiveBlockAlert(id);
 
         var OverlapX =
             Enemy.bbox_right >= bbox_left
