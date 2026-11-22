@@ -50,7 +50,7 @@ DefeatSprite = -1;
 DefeatFrames = 18;
 
 //Duración del aplastamiento y la advertencia
-FlattenedFrames = 240; //4 segundos
+FlattenedFrames = 420; //7 segundos
 WakingFrames = 150; // 2.5 segundos
 
 //Capacidad y vínculo de carga
