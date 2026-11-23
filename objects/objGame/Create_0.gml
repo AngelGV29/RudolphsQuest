@@ -8,6 +8,8 @@ if (instance_number(objGame) > 1)
 }
 
 persistent = true;
+//Evitar resolver dos veces una muerte en el mismo intento
+PlayerDeathProcessed = false;
 
 //Recursos acumulados
 Score = 0;
@@ -24,11 +26,12 @@ MaxLives = 99;
 StartingLives = 3;
 Lives = StartingLives;
 
-//Recompensas configurables
+//Puntos de cada recompensa
 CoinPoints = 50;
-CoinsPerLife = 100;
-//Valor provisional del diamante
 DiamondPoints = 100;
+
+//Cantidad a recoger para obtener una vida extra
+CoinsPerLife = 100;
 DiamondsPerLife = 50;
 
 //Reproducciones activas de sonidos de recogida
@@ -206,14 +209,18 @@ GameOver = function()
     room_restart();
 };
 
+
 //Resolver una muerte después de su secuencia audiovisual
 CompletePlayerDeath = function()
 {
+    if (PlayerDeathProcessed)
+    {
+        return;
+    }
+    
+    PlayerDeathProcessed = true;
+    
     Lives = max(Lives - 1, 0);
-
-    show_debug_message(
-        "Muerte resuelta. Vidas restantes: " + string(Lives)
-    );
 
     if (Lives <= 0)
     {

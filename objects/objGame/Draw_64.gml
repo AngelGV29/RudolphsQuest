@@ -70,6 +70,30 @@ draw_text(
     "Diamonds: " + string(LevelDiamonds)
 );
 
+//Tiempo del nivel, centrado en la parte superior
+var Level = instance_find(
+    objLevelController,
+    0
+);
+
+if (instance_exists(Level))
+{
+    if (Level.TimerEnabled)
+    {
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_top);
+
+        draw_set_color(c_white);
+        draw_set_alpha(1);
+
+        draw_text(
+            GuiWidth * 0.5,
+            8,
+            "TIME: " + string(Level.TimeSeconds)
+        );
+    }
+}
+
 //Restaurar la configuración de dibujo
 draw_set_color(PreviousColor);
 draw_set_alpha(PreviousAlpha);
