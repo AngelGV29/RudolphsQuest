@@ -213,9 +213,9 @@
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
+    {"roomId":{"name":"rmTest05","path":"rooms/rmTest05/rmTest05.yy",},},
     {"roomId":{"name":"rmTest06","path":"rooms/rmTest06/rmTest06.yy",},},
     {"roomId":{"name":"rmTest04","path":"rooms/rmTest04/rmTest04.yy",},},
-    {"roomId":{"name":"rmTest05","path":"rooms/rmTest05/rmTest05.yy",},},
     {"roomId":{"name":"rmTest03","path":"rooms/rmTest03/rmTest03.yy",},},
     {"roomId":{"name":"rmTest01","path":"rooms/rmTest01/rmTest01.yy",},},
     {"roomId":{"name":"rmTest02","path":"rooms/rmTest02/rmTest02.yy",},},

@@ -41,3 +41,14 @@ DrawBox = function(Left, Top, Right, Bottom, Color)
         true
     );
 };
+
+//Datos de la ventana antes de entrar a pantalla completa
+SavedWindowWidth = window_get_width();
+SavedWindowHeight = window_get_height();
+
+SavedWindowX = window_get_x();
+SavedWindowY = window_get_y();
+
+//Control de la transición
+WindowChangeTimer = 0;
+WindowRestorePending = false;
