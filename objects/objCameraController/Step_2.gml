@@ -84,3 +84,14 @@ camera_set_view_pos(
     round(CameraX),
     round(CameraY)
 );
+
+//Evaluar el límite inferior después de mover la cámara
+var Level = instance_find(
+    objLevelController,
+    0
+);
+
+if (instance_exists(Level))
+{
+    Level.CheckVoid(CameraId);
+}

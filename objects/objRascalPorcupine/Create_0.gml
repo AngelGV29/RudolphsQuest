@@ -14,6 +14,7 @@ DropsDiamond = true;
 //Recursos de cada estado heredado
 StateSpriteNormal = sprRascalPorcupinePlaceholder;
 StateMaskNormal = sprRascalPorcupineMask;
+StateAnimSpeedNormal = 1;
 
 StateSpriteFlattened = sprRascalPorcupineFlattenedPlaceholder;
 StateMaskFlattened = sprRascalPorcupineFlattenedMask;
@@ -36,25 +37,58 @@ Gravity = 0.16;
 MaxFallSpeed = 5.90;
 Facing = -1;
 
-//Duración y contador de la defensa contra el martillo
+//Tiempo manteniendo la pose de protección
 BlockFrames = 90;
 BlockTimer = 0;
+
 BlockActive = false;
 
-//Iniciar o reiniciar la defensa temporal
+//Duración de la entrada y salida, en pasos
+BlockEnterFrames = 18;
+BlockReleaseFrames = 18;
+
+//Control de la fase visual
+BlockPhase = PORCUPINE_BLOCK_PHASE.ENTER;
+BlockPhaseTimer = 0;
+
+//Iniciar la protección o renovar la que ya está activa
 StartBlockReaction = function()
 {
-    BlockTimer = BlockFrames;
-    BlockActive = true;
+    BlockTimer = max(1, floor(BlockFrames));
 
     HSpeed = 0;
     HSubPixel = 0;
+
+    if (BlockActive)
+    {
+        //Si estaba saliendo, recuperar directamente la pose protegida
+        if (BlockPhase == PORCUPINE_BLOCK_PHASE.EXIT)
+        {
+            BlockPhase = PORCUPINE_BLOCK_PHASE.HOLD;
+            BlockPhaseTimer = 0;
+
+            image_index = max(
+                0,
+                sprite_get_number(StateSpriteBlock) - 1
+            );
+
+            image_speed = 0;
+        }
+
+        //No reiniciar la entrada ni la pose que ya mantiene
+        return;
+    }
+
+    BlockActive = true;
+
+    BlockPhase = PORCUPINE_BLOCK_PHASE.ENTER;
+    BlockPhaseTimer = 0;
 
     sprite_index = StateSpriteBlock;
     mask_index = StateMaskNormal;
 
     image_index = 0;
-    image_speed = 1;
+    image_speed = 0;
 };
 
 //Comprobar si hay suelo delante antes de avanzar
@@ -83,7 +117,7 @@ HasGroundAhead = function()
 };
 
 //Avanzar constantemente y regresar antes de caer de un borde
-//Patrullar o permanecer temporalmente a la defensiva
+//Patrullar o actualizar las fases de protección
 UpdateNormalState = function()
 {
     if (BlockActive)
@@ -91,21 +125,97 @@ UpdateNormalState = function()
         HSpeed = 0;
         HSubPixel = 0;
 
-        BlockTimer = max(BlockTimer - 1, 0);
+        var FrameCount = max(
+            1,
+            sprite_get_number(StateSpriteBlock)
+        );
 
-        if (BlockTimer > 0)
-        {
-            return;
-        }
+        var LastFrame = FrameCount - 1;
 
-        //Restaurar la apariencia una sola vez al terminar
-        BlockActive = false;
-
-        sprite_index = StateSpriteNormal;
-        mask_index = StateMaskNormal;
-
-        image_index = 0;
         image_speed = 0;
+
+        switch (BlockPhase)
+        {
+            case PORCUPINE_BLOCK_PHASE.ENTER:
+                var EnterDuration = max(
+                    1,
+                    floor(BlockEnterFrames)
+                );
+
+                if (BlockPhaseTimer >= EnterDuration)
+                {
+                    BlockPhase = PORCUPINE_BLOCK_PHASE.HOLD;
+                    BlockPhaseTimer = 0;
+
+                    image_index = LastFrame;
+
+                    return;
+                }
+
+                image_index = min(
+                    LastFrame,
+                    floor(
+                        BlockPhaseTimer
+                        * FrameCount
+                        / EnterDuration
+                    )
+                );
+
+                BlockPhaseTimer += 1;
+
+                return;
+
+            case PORCUPINE_BLOCK_PHASE.HOLD:
+                image_index = LastFrame;
+
+                BlockTimer = max(
+                    BlockTimer - 1,
+                    0
+                );
+
+                if (BlockTimer == 0)
+                {
+                    BlockPhase = PORCUPINE_BLOCK_PHASE.EXIT;
+                    BlockPhaseTimer = 0;
+                }
+
+                return;
+
+            case PORCUPINE_BLOCK_PHASE.EXIT:
+                var ExitDuration = max(
+                    1,
+                    floor(BlockReleaseFrames)
+                );
+
+                if (BlockPhaseTimer < ExitDuration)
+                {
+                    var ReverseOffset = min(
+                        LastFrame,
+                        floor(
+                            BlockPhaseTimer
+                            * FrameCount
+                            / ExitDuration
+                        )
+                    );
+
+                    image_index = LastFrame - ReverseOffset;
+
+                    BlockPhaseTimer += 1;
+
+                    return;
+                }
+
+                //Volver a la animación normal
+                BlockActive = false;
+
+                sprite_index = StateSpriteNormal;
+                mask_index = StateMaskNormal;
+
+                image_index = 0;
+                image_speed = StateAnimSpeedNormal;
+
+                break;
+        }
     }
 
     //Invertir el sentido cuando no exista suelo por delante
@@ -192,3 +302,6 @@ ReceiveBlockBump = function(Impulse)
 
     return true;
 };
+
+//Aplicar los recursos y la animación del estado inicial
+OnStateEnter(EnemyState);

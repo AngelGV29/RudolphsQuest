@@ -1,3 +1,5 @@
-/// @description Reinicia las estadísticas al comenzar la habitación de juego
+/// @description Reinicia los datos del intento
 
 ResetLevelStats();
+
+PlayerDeathProcessed = false;

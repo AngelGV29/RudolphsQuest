@@ -165,7 +165,85 @@ DropCarriedEnemy = function()
     Enemy.ChangeState(ENEMY_STATE.FLATTENED);
 };
 
-//Aplica daño y devuelve si el golpe fue aceptado
+//Entrar en muerte únicamente cuando ya no queda salud
+EvaluateHealth = function()
+{
+    if (ActionState == PLAYER_ACTION_STATE.DEAD)
+    {
+        return false;
+    }
+
+    if (Hp > 0)
+    {
+        return false;
+    }
+
+    Hp = 0;
+
+    ActionState = PLAYER_ACTION_STATE.DEAD;
+
+    DropCarriedEnemy();
+
+    ThrowRecoveryTimer = 0;
+
+    CoyoteTimer = 0;
+    JumpBufferTimer = 0;
+
+    HurtTimer = 0;
+    InvulnerabilityTimer = 0;
+
+    HammerActive = false;
+    HammerTimer = 0;
+
+    UpperOverrideSprite = -1;
+    UpperOverrideFrame = 0;
+
+    DeathTimer = DeathFrames;
+    DeathResolved = false;
+
+    GameOverStarted = false;
+    GameOverSound = -1;
+
+    Facing = DeathFacing;
+    image_xscale = DeathFacing;
+
+    image_alpha = 1;
+
+    sprite_index = DeathSprite;
+    image_index = 0;
+    image_speed = 1;
+
+    DeathAnimationFinished = false;
+
+    return true;
+};
+
+//Agotar la salud y detener el movimiento sin aplicar retroceso
+DepleteHp = function()
+{
+    //No modificar una muerte que ya está en curso
+    if (ActionState == PLAYER_ACTION_STATE.DEAD)
+    {
+        return false;
+    }
+
+    Hp = 0;
+
+    //Cancelar las velocidades actuales
+    HSpeed = 0;
+    VSpeed = 0;
+
+    //Descartar también los desplazamientos fraccionales pendientes
+    HSubPixel = 0;
+    VSubPixel = 0;
+
+    //Conservar la orientación al no existir una dirección de impacto
+    DeathFacing = Facing;
+
+    return EvaluateHealth();
+};
+
+//Aplicar daño de contacto o proyectil con su retroceso habitual
 TakeDamage = function(DamageAmount, SourceX)
 {
     if (ActionState == PLAYER_ACTION_STATE.DEAD)
@@ -178,11 +256,10 @@ TakeDamage = function(DamageAmount, SourceX)
         return false;
     }
 
-    //Soltar solo si el daño fue aceptado
     DropCarriedEnemy();
-    //Cancelar la recuperación del lanzamiento al recibir daño
+
     ThrowRecoveryTimer = 0;
-    
+
     Hp = max(
         Hp - DamageAmount,
         0
@@ -212,51 +289,22 @@ TakeDamage = function(DamageAmount, SourceX)
     );
 
     OnGround = false;
+
     CoyoteTimer = 0;
     JumpBufferTimer = 0;
 
     if (Hp <= 0)
     {
-        ActionState = PLAYER_ACTION_STATE.DEAD;
-    
-        DeathTimer = DeathFrames;
-        DeathResolved = false;
-    
-        GameOverStarted = false;
-        GameOverSound = -1;
-    
-        //Orientar la pose para caer hacia atrás respecto al golpe
         DeathFacing = -KnockbackDirection;
-    
-        Facing = DeathFacing;
-        image_xscale = DeathFacing;
-    
-        //Cancelar cualquier presentación de ataque anterior
-        HammerActive = false;
-        HammerTimer = 0;
-    
-        UpperOverrideSprite = -1;
-        UpperOverrideFrame = 0;
-    
-        InvulnerabilityTimer = 0;
-        image_alpha = 1;
-    
-        //Iniciar la animación una sola vez al morir
-        sprite_index = DeathSprite;
-        image_index = 0;
-        image_speed = 1;
-    
-        DeathAnimationFinished = false;
+
+        EvaluateHealth();
     }
     else
     {
-        ActionState =
-            PLAYER_ACTION_STATE.HURT;
+        ActionState = PLAYER_ACTION_STATE.HURT;
 
         HurtTimer = HurtFrames;
-
-        InvulnerabilityTimer =
-            InvulnerabilityFrames;
+        InvulnerabilityTimer = InvulnerabilityFrames;
     }
 
     return true;

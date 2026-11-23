@@ -31,6 +31,13 @@ function scrStates(){
         DEFEATED
     }
     
+    enum PORCUPINE_BLOCK_PHASE
+    {
+        ENTER,
+        HOLD,
+        EXIT
+    }
+    
     enum DRAGON_FIRE_PHASE
     {
         WAIT,
