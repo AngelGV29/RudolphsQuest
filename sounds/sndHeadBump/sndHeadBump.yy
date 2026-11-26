@@ -10,7 +10,7 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":0.26403627,
+  "duration":0.7280272,
   "exportDir":"",
   "name":"sndHeadBump",
   "parent":{
@@ -21,6 +21,6 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"sndHeadBump.wav",
+  "soundFile":"sndHeadBump.mp3",
   "volume":1.0,
 }
